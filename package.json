@@ -20,6 +20,7 @@
     "dexie": "2.0.1",
     "dragscroll": "0.0.8",
     "font-awesome": "4.7.0",
+    "github-api": "^3.0.0",
     "jquery": "3.2.1",
     "lodash": "4.17.4",
     "marked": "0.3.9",
