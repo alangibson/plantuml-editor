@@ -60,7 +60,9 @@ const state: any = {
   snippetKey: {
     win: 'Ctrl-E',
     mac: 'Cmd-E'
-  }
+  },
+  showHTTPSWarning: true,
+  showHotkeyTips: true
 }
 
 const getters: any = {
@@ -180,6 +182,12 @@ const mutations: any = {
   },
   setIsLoading(state: any, isLoading: boolean) {
     state.isLoading = isLoading
+  },
+  setShowHTTPSWarning (state: any, show: boolean) {
+    state.showHTTPSWarning = show
+  },
+  setShowHotkeyTips (state: any, show: boolean) {
+    state.showHotkeyTips = show
   }
 }
 

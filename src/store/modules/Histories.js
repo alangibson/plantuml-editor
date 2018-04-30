@@ -4,8 +4,10 @@ import Dexie from 'dexie'
 import lodash from 'lodash'
 const _: any = lodash
 
+// Since Dexie is a wrapper for IndexedDB, it doesnt make much sense to have it in state object.
+var db = new Dexie('PlantumlEditor')
+
 const state: any = {
-  db: new Dexie('PlantumlEditor'),
   schemes: ['++id,text,src,created', '++id,text,encodedText,created'],
   versions: [1, 2],
   data: []
@@ -14,8 +16,8 @@ const state: any = {
 const mutations: any = {
   defineScheme(state: any) {
     // バージョン 2
-    state.db
-      .version(state.versions[1])
+    // Version 2
+    db.version(state.versions[1])
       .stores({
         plantuml: state.schemes[1]
       })
@@ -25,12 +27,14 @@ const mutations: any = {
         })
       })
     // バージョン 1
-    state.db.version(state.versions[0]).stores({
-      plantuml: state.schemes[0]
-    })
+    // Version 1
+    db.version(state.versions[0])
+      .stores({
+        plantuml: state.schemes[0]
+      })
   },
   getHistories(state: any) {
-    state.db.plantuml
+    db.plantuml
       .reverse()
       .toArray()
       .then(function(data: any[]) {
@@ -38,14 +42,14 @@ const mutations: any = {
       })
   },
   save(state: any, { text, encodedText }: any) {
-    state.db.plantuml.add({
+    db.plantuml.add({
       text: text,
       encodedText: encodedText,
       created: new Date().toLocaleString()
     })
   },
   delete(state: any, id: number) {
-    state.db.plantuml.delete(id)
+    db.plantuml.delete(id)
   }
 }
 
