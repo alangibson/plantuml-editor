@@ -33,7 +33,7 @@ const state: any = {
   defaultKeyMap: 'sublime',
   defaultIndent: 'space2',
   codemirrorIndent: 'space2',
-  umlWidth: 50,
+  umlWidth: 100,
   umlExtension: 'svg',
   umlExtensions: [
     {

@@ -5,8 +5,9 @@
         <div v-html="preMarkdown"></div>
         <div class="text-center" align="center">
           <p>
-            <img :src="src" @load="loadedImg" v-if="!isSvg">
-            <object :data="src" :width="umlWidth+'%'" @load="loadedImg" v-if="isSvg"></object>
+            <img :src="src" @load="loadedImg" v-if="!isSvg"/>
+            <!--<object :data="src" :width="umlWidth+'%'" @load="loadedImg" v-if="isSvg"></object>-->
+            <object :data="src" @load="loadedImg" v-if="isSvg"></object>
           </p>
         </div>
         <div v-html="afterMarkdown"></div>
@@ -18,6 +19,8 @@
 <script>
 /* @flow */
 
+import dragscroll from 'vue-dragscroll'
+
 export default {
   name: 'uml',
   props: {
@@ -25,6 +28,9 @@ export default {
       type: String,
       default: '100%'
     }
+  },
+  directives: {
+    'dragscroll': dragscroll
   },
   computed: {
     src (): string {
@@ -45,7 +51,8 @@ export default {
   },
   data (): any {
     return {
-      loadingDelay: 500
+      loadingDelay: 500,
+      drag: true
     }
   },
   created () {
@@ -72,7 +79,7 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 .umlImage {
-  overflow: auto;
-  width: 100%;
+  overflow: scroll;
+  /*width: 100%;*/
 }
 </style>
