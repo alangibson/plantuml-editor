@@ -6,6 +6,10 @@ declare module 'vuex' {
   declare var exports: any;
 }
 
+declare module 'vuex-persistedstate' {
+  declare var exports: any;
+}
+
 declare module 'vee-validate' {
   declare var exports: any;
 }
