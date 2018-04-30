@@ -10,6 +10,7 @@ import histories from './modules/Histories'
 import umlTemplate from './modules/UmlTemplate'
 import cheatSheet from './modules/CheatSheet'
 import gistApi from './modules/GistApi'
+import github from './modules/Github'
 
 export default new Vuex.Store({
   modules: {
@@ -18,6 +19,7 @@ export default new Vuex.Store({
     histories,
     umlTemplate,
     cheatSheet,
-    gistApi
+    gistApi,
+    github
   }
 })

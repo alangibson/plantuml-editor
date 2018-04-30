@@ -22,6 +22,10 @@ declare module 'axios' {
   declare var exports: any;
 }
 
+declare module 'github-api' {
+  declare var exports: any;
+}
+
 declare module 'lodash' {
   declare var exports: any;
 }
