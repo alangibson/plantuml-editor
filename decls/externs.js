@@ -6,7 +6,7 @@ declare module 'vuex' {
   declare var exports: any;
 }
 
-declare module 'vue-dragscroll' {
+declare module 'dragscroll' {
   declare var exports: any;
 }
 
