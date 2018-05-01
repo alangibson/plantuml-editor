@@ -1,15 +1,10 @@
 <template>
   <div class="row">
     <div class="col-sm-12">
-      <div id="umlArea" class="umlImage" :style="{'height':height}">
+      <div id="umlArea" class="dragscroll umlImage" :style="{'height':height}">
         <div v-html="preMarkdown"></div>
-        <div class="text-center" align="center">
-          <p>
-            <img :src="src" @load="loadedImg" v-if="!isSvg"/>
-            <!--<object :data="src" :width="umlWidth+'%'" @load="loadedImg" v-if="isSvg"></object>-->
-            <object :data="src" @load="loadedImg" v-if="isSvg"></object>
-          </p>
-        </div>
+          <img :src="src" @load="loadedImg" v-if="!isSvg"/>
+          <object :data="src" @load="loadedImg" v-if="isSvg" :width="umlWidth"></object>
         <div v-html="afterMarkdown"></div>
       </div>
     </div>
@@ -19,7 +14,7 @@
 <script>
 /* @flow */
 
-import dragscroll from 'vue-dragscroll'
+import 'dragscroll'
 
 export default {
   name: 'uml',
@@ -28,9 +23,6 @@ export default {
       type: String,
       default: '100%'
     }
-  },
-  directives: {
-    'dragscroll': dragscroll
   },
   computed: {
     src (): string {
@@ -45,8 +37,12 @@ export default {
     afterMarkdown (): string {
       return this.$store.state.plantumlEditor.afterMarkdown
     },
-    umlWidth (): number {
-      return this.$store.state.plantumlEditor.umlWidth
+    umlWidth (): string {
+      if (this.$store.state.plantumlEditor.umlWidth && this.$store.state.plantumlEditor.umlWidth >= 1) {
+        return this.$store.state.plantumlEditor.umlWidth + '%'
+      } else {
+        return 'auto'
+      }
     }
   },
   data (): any {
