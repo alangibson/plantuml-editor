@@ -3,8 +3,8 @@
     <div class="col-sm-12">
       <div id="umlArea" class="dragscroll umlImage" :style="{'height':height}">
         <div v-html="preMarkdown"></div>
-          <img :src="src" @load="loadedImg" v-if="!isSvg"/>
-          <object :data="src" @load="loadedImg" v-if="isSvg" :width="umlWidth"></object>
+        <img :src="src" @load="loadedImg" v-if="!isSvg"/>
+        <object :data="src" @load="loadedImg" v-if="isSvg" :width="umlWidth"></object>
         <div v-html="afterMarkdown"></div>
       </div>
     </div>
