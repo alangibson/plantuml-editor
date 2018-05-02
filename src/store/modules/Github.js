@@ -5,6 +5,7 @@ import GitHub from 'github-api'
 export default {
   namespaced: true,
   state: {
+    token: null,
     // Owner is either a User or Organization
     owner: null,
     ownerName: null,
@@ -27,23 +28,25 @@ export default {
     // GitHub API object
     gh: null,
     // Currently selected trees
-    trees: {}
+    trees: {},
+    contents: null
   },
-  mutations: {},
+  mutations: {
+    setToken (state: any, token: string) {
+      state.token = token
+    }
+  },
   actions: {
     authenticateToken (context: any, token: string) {
+      context.commit('setToken', token)
       context.state.gh = new GitHub({
         token: token
       })
       context.state.user = context.state.gh.getUser()
-      // context.state.user.getProfile()
-      //   .then(res => {
-      //     context.state.userProfile = res.data
-      //     context.dispatch('listOwners')
-      //   })
       // Set our user to default owner
       context.state.owner = context.state.user
       context.dispatch('listOwners')
+      // context.dispatch('searchPlantumlFiles')
     },
     setUserProfile (context: any): Promise<*> {
       console.log('setUserProfile')
@@ -138,6 +141,22 @@ export default {
           let trees: any = JSON.parse(JSON.stringify(res.data))
           trees.branchName = context.state.branchName
           context.state.trees = trees
+        })
+    },
+    searchTrees (context: any, extensions: Array<string>) {
+      context.state.repo.getTree(context.state.branchName)
+        .then((res: any) => {
+          let trees: any = JSON.parse(JSON.stringify(res.data))
+          // TODO filter extensions
+          trees.branchName = context.state.branchName
+          context.state.trees = trees
+        })
+    },
+    setContents (context: any, {ref, path}: {ref: string, path: string}) {
+      context.state.repo.getContents(ref, path, true)
+        .then((res: any) => {
+          context.state.contents = res.data
+          context.dispatch('plantumlEditor/syncText', res.data, { root: true })
         })
     }
   }

@@ -22,7 +22,13 @@
           </a>
           <ul class="dropdown-menu">
             <li><a href="#derp" @click.prevent="selectGithubRepo(true)">Select Repository</a></li>
-            <li><a href="#derp" @click.prevent="authWithGithub">Authenticate with Github</a></li>
+            <!--<li><a href="#derp" @click.prevent="authWithGithub">Authenticate with Github</a></li>-->
+            <li>
+              <a href="#" data-toggle="modal" data-target="#options">
+                Authenticate with Github
+              </a>
+            </li>
+
           </ul>
         </li>
       </ul>

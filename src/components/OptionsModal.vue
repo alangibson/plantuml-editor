@@ -9,8 +9,8 @@
         <div class="modal-body">
           <form class="form-horizontal">
             <div class="form-group">
-              <label class="col-sm-2 control-label">keymap</label>
-              <div class="col-sm-10">
+              <label class="col-sm-4 control-label">keymap</label>
+              <div class="col-sm-8">
                 <label class="radio-inline">
                   <input type="radio" name="keymap" v-model="keymap" value="sublime"> sublime
                 </label>
@@ -23,8 +23,8 @@
               </div>
             </div>
             <div class="form-group">
-              <label class="col-sm-2 control-label">indent</label>
-              <div class="col-sm-10">
+              <label class="col-sm-4 control-label">indent</label>
+              <div class="col-sm-8">
                 <label class="radio-inline">
                   <input type="radio" name="indent" v-model="indent" value="space2"> space 2
                 </label>
@@ -33,6 +33,14 @@
                 </label>
                 <label class="radio-inline">
                   <input type="radio" name="indent" v-model="indent" value="tab"> tab
+                </label>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="col-sm-4 control-label">GitHub API Token</label>
+              <div class="col-sm-8">
+                <label>
+                  <input name="githubApiKey" v-model="githubApiKey">
                 </label>
               </div>
             </div>
@@ -66,6 +74,14 @@ export default {
       },
       set (value: string) {
         this.$store.dispatch('plantumlEditor/syncCodeMirrorIndent', value)
+      }
+    },
+    githubApiKey: {
+      get (): string {
+        return this.$store.state.github.token
+      },
+      set (value: string) {
+        this.$store.dispatch('github/authenticateToken', value)
       }
     }
   }
