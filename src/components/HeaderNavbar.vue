@@ -21,39 +21,10 @@
             <span class="glyphicon glyphicon-info-sign"></span> github <b class="caret"></b>
           </a>
           <ul class="dropdown-menu">
-            <li><a href="#derp" @click.prevent="selectGithubRepo(true)">Select Repository</a></li>
-            <!--<li><a href="#derp" @click.prevent="authWithGithub">Authenticate with Github</a></li>-->
-            <li>
-              <a href="#" data-toggle="modal" data-target="#options">
-                Authenticate with Github
-              </a>
-            </li>
-
+            <li><a href="#derp" @click.prevent="selectGithubRepo(true)">Open</a></li>
           </ul>
         </li>
       </ul>
-      <div class="modal fade" id="selectGithubRepoModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true"
-           data-backdrop="false">
-        <div class="modal-dialog" role="document">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title" id="exampleModalLongTitle">Modal title</h5>
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-              </button>
-            </div>
-            <div class="modal-body">
-              <github></github>
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-dismiss="modal"
-                      @click.prevent="selectGithubRepo(false)">Close</button>
-              <button type="button" class="btn btn-primary"
-                      @click.prevent="openSelectedRepoBranch">Save changes</button>
-            </div>
-          </div>
-        </div>
-      </div>
 
       <ul class="nav navbar-nav">
         <li class="dropdown">
@@ -104,7 +75,7 @@
 /* @flow */
 
 import UmlTemplate from './UmlTemplate'
-import Github from './Github'
+import Github from './GithubModal'
 import $ from 'jquery'
 
 export default {

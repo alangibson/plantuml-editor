@@ -2,9 +2,15 @@
 
 import GitHub from 'github-api'
 
+function clone (o: any): any {
+  return JSON.parse(JSON.stringify(o))
+}
+
 export default {
   namespaced: true,
   state: {
+    // GitHub API object
+    gh: null,
     token: null,
     // Owner is either a User or Organization
     owner: null,
@@ -25,15 +31,45 @@ export default {
     organizations: [],
     // Concatenation of organizations and username
     // owners: [],
-    // GitHub API object
-    gh: null,
     // Currently selected trees
     trees: {},
+    // History of tree navigation
+    treeStack: [],
+    // Blob contents
     contents: null
   },
   mutations: {
     setToken (state: any, token: string) {
       state.token = token
+    },
+    setOwnerName (state: any, ownerName: string) {
+      state.ownerName = ownerName
+    },
+    setRepositoryName (state: any, repositoryName: string) {
+      state.repositoryName = repositoryName
+    },
+    setRepositories (state: any, repositories: Array<any>) {
+      state.repositories = repositories
+    },
+    setRepositoryBranch (state: any, {ownerName, repositoryName, branchName}: {ownerName: string, repositoryName: string, branchName: string}) {
+      state.ownerName = ownerName
+      state.repositoryName = repositoryName
+      state.branchName = branchName
+    },
+    setBranchName (state: any, branchName: string) {
+      state.branchName = branchName
+    },
+    setBranch (state: any, branchName: string) {
+      state.branchName = branchName
+    },
+    setBranches (state: any, branches: Array<any>) {
+      state.branches = branches
+    },
+    setTree (state: any, tree: any) {
+      state.trees = tree
+    },
+    setContents (state: any, contents: string) {
+      state.contents = contents
     }
   },
   actions: {
@@ -43,32 +79,32 @@ export default {
         token: token
       })
       context.state.user = context.state.gh.getUser()
-      // Set our user to default owner
-      context.state.owner = context.state.user
-      context.dispatch('listOwners')
-      // context.dispatch('searchPlantumlFiles')
+      // TODO Set our user to default owner?
+      // context.state.owner = context.state.user
+      // context.dispatch('listOwners')
     },
     setUserProfile (context: any): Promise<*> {
-      console.log('setUserProfile')
       return context.state.user.getProfile()
         .then((res: any) => {
           context.state.userProfile = res.data
         })
     },
     setOwner (context: any, ownerName: string) {
-      context.state.ownerName = ownerName
+      // context.state.ownerName = ownerName
+      context.commit('setOwnerName', ownerName)
       // Note: You can use getUser to also get Organizations
-      // context.state.owner = context.state.gh.getOrganization(ownerName)
       context.state.owner = context.state.gh.getUser(ownerName)
       // Reload repositories
-      context.state.repositoryName = null
+      // context.state.repositoryName = null
+      context.commit('setRepositoryName', null)
       context.dispatch('listRepositories')
       // Clear branches
-      context.state.branchName = null
-      context.state.branches = []
+      // context.state.branchName = null
+      context.commit('setBranchName', null)
+      // context.state.branches = []
+      context.commit('setBranches', [])
     },
     listOrganizations (context: any): Promise<*> {
-      console.log('listOrganizations')
       return context.state.gh.getUser().listOrgs()
         .then((res: any) => {
           let orgs: Array<any> = []
@@ -79,7 +115,6 @@ export default {
         })
     },
     listOwners (context: any): Promise<*> {
-      console.log('listOwners')
       return context.dispatch('setUserProfile')
         .then(() => {
           context.dispatch('listOrganizations')
@@ -89,20 +124,9 @@ export default {
             })
         })
     },
-    setRepository (context: any, { ownerName, repositoryName }: { ownerName: string, repositoryName: string }) {
-      console.log('Setting repo', ownerName, repositoryName)
-      context.dispatch('clearBranches')
-      context.state.branchName = 'master'
-      context.state.ownerName = ownerName
-      context.state.repositoryName = repositoryName
-      context.state.repo = context.state.gh.getRepo(ownerName, repositoryName)
-      context.dispatch('listBranches')
-    },
-    setBranch (context: any, { branchName }: {branchName: string}) {
-      console.log('Setting branch', branchName)
-      context.state.branchName = branchName
-      context.dispatch('listTrees')
-    },
+    //
+    // Repositories
+    //
     listRepositories (context: any): Promise<*> {
       let f: any = null
       if (typeof context.state.owner.listRepos === 'function') {
@@ -118,9 +142,22 @@ export default {
           res.data.forEach((repo: any) => {
             repos.push(repo)
           })
-          context.state.repositories = repos
+          // context.state.repositories = repos
+          context.commit('setRepositories', repos)
         })
     },
+    setRepository (context: any, { ownerName, repositoryName }: { ownerName: string, repositoryName: string }) {
+      context.dispatch('clearBranches')
+      context.commit('setRepositoryBranch', {ownerName, repositoryName, branchName: 'master'})
+      // context.state.branchName = 'master'
+      // context.state.ownerName = ownerName
+      // context.state.repositoryName = repositoryName
+      context.state.repo = context.state.gh.getRepo(ownerName, repositoryName)
+      context.dispatch('listBranches')
+    },
+    //
+    // Branches
+    //
     listBranches (context: any): Promise<*> {
       // List branches in currently selected repository
       return context.state.repo.listBranches()
@@ -129,33 +166,69 @@ export default {
           res.data.forEach((branch: any) => {
             branches.push(branch)
           })
-          context.state.branches = branches
+          // context.state.branches = branches
+          context.commit('setBranches', branches)
         })
     },
-    clearBranches (context: any) {
-      context.state.branches = []
+    setBranch (context: any, { branchName }: {branchName: string}) {
+      // context.state.branchName = branchName
+      context.commit('setBranch', branchName)
+      context.dispatch('listTrees')
     },
+    clearBranches (context: any) {
+      // context.state.branches = []
+      context.commit('setBranches', [])
+    },
+    //
+    // Trees
+    //
     listTrees (context: any) {
       context.state.repo.getTree(context.state.branchName)
         .then((res: any) => {
-          let trees: any = JSON.parse(JSON.stringify(res.data))
+          // TODO do this with commit()
+          context.state.treeStack.push(clone(context.state.trees))
+          let trees: any = clone(res.data)
           trees.branchName = context.state.branchName
-          context.state.trees = trees
+          // context.state.trees = trees
+          context.commit('setTree', trees)
         })
     },
-    searchTrees (context: any, extensions: Array<string>) {
-      context.state.repo.getTree(context.state.branchName)
+    setTree (context: any, sha: string) {
+      context.state.repo.getTree(sha)
         .then((res: any) => {
-          let trees: any = JSON.parse(JSON.stringify(res.data))
-          // TODO filter extensions
+          // TODO do this with commit()
+          context.state.treeStack.push(clone(context.state.trees))
+          let trees: any = clone(res.data)
+          // TODO invalid assumption?
           trees.branchName = context.state.branchName
-          context.state.trees = trees
+          // context.state.trees = trees
+          context.commit('setTree', trees)
+        })
+    },
+    backTree (context: any) {
+      // TODO do this with commit()
+      let trees: any = context.state.treeStack.pop()
+      if (trees) {
+        // context.state.trees = trees
+        context.commit('setTree', trees)
+      }
+    },
+    //
+    // Blobs
+    //
+    setBlob (context: any, sha: string) {
+      context.state.repo.getBlob(sha)
+        .then((res: any) => {
+          // context.state.contents = res.data
+          context.commit('setContents', res.data)
+          context.dispatch('plantumlEditor/syncText', res.data, { root: true })
         })
     },
     setContents (context: any, {ref, path}: {ref: string, path: string}) {
       context.state.repo.getContents(ref, path, true)
         .then((res: any) => {
-          context.state.contents = res.data
+          // context.state.contents = res.data
+          context.commit('setContents', res.data)
           context.dispatch('plantumlEditor/syncText', res.data, { root: true })
         })
     }

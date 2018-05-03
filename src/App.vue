@@ -21,6 +21,7 @@
     <helpModal></helpModal>
     <optionsModal></optionsModal>
     <gistModal></gistModal>
+    <githubModal></githubModal>
   </div>
 </template>
 
@@ -39,6 +40,7 @@ import HeaderNavbar from './components/HeaderNavbar'
 import HelpModal from './components/HelpModal'
 import OptionsModal from './components/OptionsModal'
 import GistModal from './components/GistModal'
+import GithubModal from './components/GithubModal'
 import HistoryList from './components/HistoryList'
 import CheatSheet from './components/CheatSheet'
 import FunctionTop from './components/FunctionTop'
@@ -55,6 +57,7 @@ export default {
     OptionsModal,
     GistModal,
     HistoryList,
+    GithubModal,
     CheatSheet,
     FunctionTop,
     Uml,
