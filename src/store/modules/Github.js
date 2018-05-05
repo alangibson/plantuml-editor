@@ -36,7 +36,8 @@ export default {
     // History of tree navigation
     treeStack: [],
     // Blob contents
-    contents: null
+    contents: null,
+    settingsAuthenticationErrorMessage: ''
   },
   mutations: {
     setToken (state: any, token: string) {
@@ -44,6 +45,9 @@ export default {
     },
     setOwnerName (state: any, ownerName: string) {
       state.ownerName = ownerName
+    },
+    setOwner (state: any, owner: any) {
+      state.owner = owner
     },
     setRepositoryName (state: any, repositoryName: string) {
       state.repositoryName = repositoryName
@@ -70,18 +74,35 @@ export default {
     },
     setContents (state: any, contents: string) {
       state.contents = contents
+    },
+    settingsAuthenticationErrorMessage (state: any, message: string) {
+      state.settingsAuthenticationErrorMessage = message
     }
   },
   actions: {
-    authenticateToken (context: any, token: string) {
+    authenticateToken (context: any, token: string): Promise<*> {
+      console.log('authenticateToken: setting token', token)
       context.commit('setToken', token)
       context.state.gh = new GitHub({
         token: token
       })
       context.state.user = context.state.gh.getUser()
-      // TODO Set our user to default owner?
-      // context.state.owner = context.state.user
-      // context.dispatch('listOwners')
+      return context.state.user.getProfile()
+        .then((res: any): any => {
+          console.log('authenticateToken succeeded', res)
+          context.commit('settingsAuthenticationErrorMessage', '')
+          if (!context.state.owner) {
+            console.log('authenticateToken: setting owner to', context.state.user)
+            context.commit('setOwner', context.state.user)
+          }
+          context.dispatch('listOwners')
+          return res
+        })
+        .catch((error: any) => {
+          context.commit('settingsAuthenticationErrorMessage',
+            'Failed to authenticate you with GitHub. Please check your token.')
+          throw error
+        })
     },
     setUserProfile (context: any): Promise<*> {
       return context.state.user.getProfile()
@@ -216,20 +237,18 @@ export default {
     //
     // Blobs
     //
-    setBlob (context: any, sha: string) {
-      context.state.repo.getBlob(sha)
+    setBlob (context: any, sha: string): any {
+      return context.state.repo.getBlob(sha)
         .then((res: any) => {
-          // context.state.contents = res.data
           context.commit('setContents', res.data)
-          context.dispatch('plantumlEditor/syncText', res.data, { root: true })
+          context.dispatch('plantumlEditor/renderUML', res.data, { root: true })
         })
     },
-    setContents (context: any, {ref, path}: {ref: string, path: string}) {
-      context.state.repo.getContents(ref, path, true)
+    setContents (context: any, {ref, path}: {ref: string, path: string}): any {
+      return context.state.repo.getContents(ref, path, true)
         .then((res: any) => {
-          // context.state.contents = res.data
           context.commit('setContents', res.data)
-          context.dispatch('plantumlEditor/syncText', res.data, { root: true })
+          context.dispatch('plantumlEditor/renderUML', res.data, { root: true })
         })
     }
   }

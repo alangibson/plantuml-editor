@@ -21,7 +21,8 @@
             <span class="glyphicon glyphicon-info-sign"></span> github <b class="caret"></b>
           </a>
           <ul class="dropdown-menu">
-            <li><a href="#derp" @click.prevent="selectGithubRepo(true)">Open</a></li>
+            <li><a href="#selectGithubRepo" @click.prevent="selectGithubRepo">Open</a></li>
+            <li><a href="#selectGithubSettings" @click.prevent="selectGithubSettings">Settings</a></li>
           </ul>
         </li>
       </ul>
@@ -84,11 +85,6 @@ export default {
     UmlTemplate,
     Github
   },
-  data (): any {
-    return {
-      showSelectGithubRepoModal: false
-    }
-  },
   computed: {
     isCloseHistory (): string {
       return this.$store.getters['layout/isCloseHistory']
@@ -119,22 +115,11 @@ export default {
     /*
      * Github support
      */
-    selectGithubRepo (showSelectGithubRepoModal: boolean) {
-      console.log('selectGithubRepo', showSelectGithubRepoModal)
-      this.showSelectGithubRepoModal = showSelectGithubRepoModal
+    selectGithubRepo () {
       $('#selectGithubRepoModal').modal('show')
     },
-    authWithGithub () {
-      // TODO show a popup
-    },
-    openSelectedRepoBranch () {
-      console.log('openSelectedRepoBranch')
-
-      // TODO actually open repo
-      this.$store.dispatch('github/listFiles')
-
-      this.showSelectGithubRepoModal = false
-      $('#selectGithubRepoModal').modal('hide')
+    selectGithubSettings () {
+      $('#githubSettingsModal').modal('show')
     }
   }
 }

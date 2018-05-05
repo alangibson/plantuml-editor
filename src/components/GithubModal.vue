@@ -61,45 +61,63 @@
 </template>
 
 <script>
+import $ from 'jquery'
+
 export default {
   methods: {
     openTree (tree: any) {
-      console.log(JSON.stringify(tree))
       if (tree.type === 'tree') {
         this.$store.dispatch('github/setTree', tree.sha)
       } else if (tree.type === 'blob') {
         this.$store.dispatch('github/setBlob', tree.sha)
         // Set window.location.hash
-        window.location.hash = '#' + this.$store.state.github.ownerName +
+        window.location.hash = '#github' +
+                               '/' + this.$store.state.github.ownerName +
                                '/' + this.$store.state.github.repositoryName +
                                '/' + tree.sha
-        // TODO close modal
+        // Close modal
+        // Doesnt work: this.showModal = false
+        $('#selectGithubRepoModal').modal('hide')
       }
     }
   },
   mounted () {
+    console.log('mounted')
     // Split anchor
     let splitHash: Array<string> = window.location.hash.slice(1).split('/')
-    let path: string = splitHash.slice(3).join('/')
+    let path: string = splitHash.slice(4).join('/')
+    // TODO If splitHash.length > 0 and ! this.$store.state.github.token, open options with error message
     // Authenticate and try to load file
     if (this.$store.state.github.token) {
       this.$store.dispatch('github/authenticateToken', this.$store.state.github.token)
         .then(() => {
+          this.$store.commit('github/settingsAuthenticationErrorMessage', '')
           // Maybe set repository and editor contents based on url anchor tag
           // let [owner: string, repository: string, branch: string, ...file: string]: Array<string> = splitHash
           // let [owner: string, repository: string, treeSHA: string]: Array<string> = splitHash
-          if (splitHash.length >= 2) {
-            this.$store.dispatch('github/setRepository', {ownerName: splitHash[0], repositoryName: splitHash[1]})
+          if (splitHash[0] === 'github') {
+            this.$store.dispatch('github/setRepository', {ownerName: splitHash[1], repositoryName: splitHash[2]})
               .then(() => {
-                if (splitHash.length === 3) {
+                if (splitHash.length === 4) {
                   // Support splitHash[2] == tree sha
-                  this.$store.dispatch('github/setBlob', splitHash[2])
+                  this.$store.dispatch('github/setBlob', splitHash[3])
                 } else {
                   // Support splitHash[2] == ref and everything else is file path (like GitHub raw urls)
-                  this.$store.dispatch('github/setContents', {ref: splitHash[2], path: path})
+                  this.$store.dispatch('github/setContents', {ref: splitHash[3], path: path})
                 }
               })
           }
+        })
+        .catch((error: any) => {
+          console.error('authenticateToken failed', error)
+          // TODO show settings with error message
+
+          this.$store.commit('github/settingsAuthenticationErrorMessage',
+            `You're trying to open a file from GitHub, but you haven't added any 
+            authentication info. Please enter your API token below then refresh
+            this page`)
+
+          $('#githubSettingsModal').modal('show')
         })
     }
   }

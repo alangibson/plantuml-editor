@@ -36,14 +36,6 @@
                 </label>
               </div>
             </div>
-            <div class="form-group">
-              <label class="col-sm-4 control-label">GitHub API Token</label>
-              <div class="col-sm-8">
-                <label>
-                  <input name="githubApiKey" v-model="githubApiKey">
-                </label>
-              </div>
-            </div>
           </form>
         </div>
         <div class="modal-footer">
@@ -74,14 +66,6 @@ export default {
       },
       set (value: string) {
         this.$store.dispatch('plantumlEditor/syncCodeMirrorIndent', value)
-      }
-    },
-    githubApiKey: {
-      get (): string {
-        return this.$store.state.github.token
-      },
-      set (value: string) {
-        this.$store.dispatch('github/authenticateToken', value)
       }
     }
   }
