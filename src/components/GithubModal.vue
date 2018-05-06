@@ -15,18 +15,13 @@
            <div class="container-fluid">
              <div class="col-sm-4">
                <ul>
-                 <li v-for="owner in $store.state.github.owners" :key="owner.login">
-                   <a @click="$store.dispatch('github/setOwner', owner.login)">{{owner.login}}</a>
-                   <ul v-if="owner.login === $store.state.github.ownerName">
-                     <li v-for="repo in $store.state.github.repositories" :key="repo.id">
-                       <a @click="$store.dispatch('github/setRepository', {ownerName: $store.state.github.ownerName, repositoryName: repo.name})">
-                         {{ repo.name }}
-                       </a>
-                       <ul v-if="repo.name === $store.state.github.repositoryName">
-                         <li v-for="branch in $store.state.github.branches">
-                           <a @click.stop="$store.dispatch('github/setBranch', {branchName: branch.name})">{{ branch.name }}</a>
-                         </li>
-                       </ul>
+                 <li v-for="repo in $store.state.github.repositories" :key="repo.id">
+                   <a @click="$store.dispatch('github/setRepo', repo)">
+                     {{ repo.full_name }}
+                   </a>
+                   <ul v-if="repo.name === $store.state.github.repositoryName">
+                     <li v-for="branch in $store.state.github.branches">
+                       <a @click.stop="$store.dispatch('github/setBranch', branch)">{{ branch.name }}</a>
                      </li>
                    </ul>
                  </li>
@@ -110,13 +105,11 @@ export default {
         })
         .catch((error: any) => {
           console.error('authenticateToken failed', error)
-          // TODO show settings with error message
-
+          // Show settings with error message
           this.$store.commit('github/settingsAuthenticationErrorMessage',
-            `You're trying to open a file from GitHub, but you haven't added any 
+            `You're trying to open a file from GitHub, but you haven't added any
             authentication info. Please enter your API token below then refresh
             this page`)
-
           $('#githubSettingsModal').modal('show')
         })
     }

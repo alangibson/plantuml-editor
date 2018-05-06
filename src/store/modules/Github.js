@@ -9,8 +9,7 @@ function clone (o: any): any {
 export default {
   namespaced: true,
   state: {
-    // GitHub API object
-    gh: null,
+    // GitHub authentication token
     token: null,
     // Owner is either a User or Organization
     owner: null,
@@ -60,11 +59,18 @@ export default {
       state.repositoryName = repositoryName
       state.branchName = branchName
     },
+    setRepo (state: any, repo: any) {
+      state.repo = repo
+      state.ownerName = repo.owner.login
+      state.repositoryName = repo.name
+      state.branchName = repo.default_branch
+    },
     setBranchName (state: any, branchName: string) {
       state.branchName = branchName
     },
-    setBranch (state: any, branchName: string) {
-      state.branchName = branchName
+    setBranch (state: any, branch: any) {
+      state.branch = branch
+      state.branchName = branch.name
     },
     setBranches (state: any, branches: Array<any>) {
       state.branches = branches
@@ -81,130 +87,75 @@ export default {
   },
   actions: {
     authenticateToken (context: any, token: string): Promise<*> {
-      console.log('authenticateToken: setting token', token)
       context.commit('setToken', token)
-      context.state.gh = new GitHub({
-        token: token
-      })
-      context.state.user = context.state.gh.getUser()
-      return context.state.user.getProfile()
+      // See if token is valid
+      return new GitHub({token: token})
+        .getUser()
+        .getProfile()
         .then((res: any): any => {
-          console.log('authenticateToken succeeded', res)
           context.commit('settingsAuthenticationErrorMessage', '')
-          if (!context.state.owner) {
-            console.log('authenticateToken: setting owner to', context.state.user)
-            context.commit('setOwner', context.state.user)
-          }
-          context.dispatch('listOwners')
           return res
         })
         .catch((error: any) => {
+          console.error(error)
           context.commit('settingsAuthenticationErrorMessage',
             'Failed to authenticate you with GitHub. Please check your token.')
           throw error
-        })
-    },
-    setUserProfile (context: any): Promise<*> {
-      return context.state.user.getProfile()
-        .then((res: any) => {
-          context.state.userProfile = res.data
-        })
-    },
-    setOwner (context: any, ownerName: string) {
-      // context.state.ownerName = ownerName
-      context.commit('setOwnerName', ownerName)
-      // Note: You can use getUser to also get Organizations
-      context.state.owner = context.state.gh.getUser(ownerName)
-      // Reload repositories
-      // context.state.repositoryName = null
-      context.commit('setRepositoryName', null)
-      context.dispatch('listRepositories')
-      // Clear branches
-      // context.state.branchName = null
-      context.commit('setBranchName', null)
-      // context.state.branches = []
-      context.commit('setBranches', [])
-    },
-    listOrganizations (context: any): Promise<*> {
-      return context.state.gh.getUser().listOrgs()
-        .then((res: any) => {
-          let orgs: Array<any> = []
-          res.data.forEach((org: any) => {
-            orgs.push(org)
-          })
-          context.state.organizations = orgs
-        })
-    },
-    listOwners (context: any): Promise<*> {
-      return context.dispatch('setUserProfile')
-        .then(() => {
-          context.dispatch('listOrganizations')
-            .then(() => {
-              context.state.owners = JSON.parse(JSON.stringify(context.state.organizations))
-              context.state.owners.push(context.state.userProfile)
-            })
         })
     },
     //
     // Repositories
     //
     listRepositories (context: any): Promise<*> {
-      let f: any = null
-      if (typeof context.state.owner.listRepos === 'function') {
-        // Owner object is a User
-        f = (): Promise<*> => context.state.owner.listRepos()
-      } else if (typeof context.state.owner.getRepos === 'function') {
-        // Owner object is an Organization
-        f = (): Promise<*> => context.state.owner.getRepos()
-      } // TODO need an else
-      return f()
+      return new GitHub({token: context.state.token})
+        .getUser()
+        .listRepos()
         .then((res: any) => {
-          let repos: Array<any> = []
-          res.data.forEach((repo: any) => {
-            repos.push(repo)
-          })
-          // context.state.repositories = repos
-          context.commit('setRepositories', repos)
+          context.commit('setRepositories', res.data)
         })
     },
-    setRepository (context: any, { ownerName, repositoryName }: { ownerName: string, repositoryName: string }) {
+    // Set active repository. Also sets the default branch.
+    setRepo (context: any, repo: any) {
+      context.commit('setRepo', repo)
       context.dispatch('clearBranches')
-      context.commit('setRepositoryBranch', {ownerName, repositoryName, branchName: 'master'})
-      // context.state.branchName = 'master'
-      // context.state.ownerName = ownerName
-      // context.state.repositoryName = repositoryName
-      context.state.repo = context.state.gh.getRepo(ownerName, repositoryName)
       context.dispatch('listBranches')
+    },
+    setRepository (context: any, { ownerName, repositoryName }: { ownerName: string, repositoryName: string }): Promise<*> {
+      context.dispatch('clearBranches')
+      context.dispatch('listBranches')
+      return new GitHub({token: context.state.token})
+        .getRepo(ownerName, repositoryName)
+        .getDetails()
+        .then((res: any): any => {
+          context.commit('setRepo', res.data)
+          return res
+        })
     },
     //
     // Branches
     //
     listBranches (context: any): Promise<*> {
-      // List branches in currently selected repository
-      return context.state.repo.listBranches()
+      return new GitHub({token: context.state.token})
+        .getRepo(context.state.ownerName, context.state.repositoryName)
+        .listBranches()
         .then((res: any) => {
-          let branches: Array<any> = []
-          res.data.forEach((branch: any) => {
-            branches.push(branch)
-          })
-          // context.state.branches = branches
-          context.commit('setBranches', branches)
+          context.commit('setBranches', res.data)
         })
     },
-    setBranch (context: any, { branchName }: {branchName: string}) {
-      // context.state.branchName = branchName
-      context.commit('setBranch', branchName)
+    setBranch (context: any, branch: any) {
+      context.commit('setBranch', branch)
       context.dispatch('listTrees')
     },
     clearBranches (context: any) {
-      // context.state.branches = []
       context.commit('setBranches', [])
     },
     //
     // Trees
     //
-    listTrees (context: any) {
-      context.state.repo.getTree(context.state.branchName)
+    listTrees (context: any): Promise<*> {
+      return new GitHub({token: context.state.token})
+        .getRepo(context.state.ownerName, context.state.repositoryName)
+        .getTree(context.state.branchName)
         .then((res: any) => {
           // TODO do this with commit()
           context.state.treeStack.push(clone(context.state.trees))
@@ -214,8 +165,10 @@ export default {
           context.commit('setTree', trees)
         })
     },
-    setTree (context: any, sha: string) {
-      context.state.repo.getTree(sha)
+    setTree (context: any, sha: string): Promise<*> {
+      return new GitHub({token: context.state.token})
+        .getRepo(context.state.ownerName, context.state.repositoryName)
+        .getTree(sha)
         .then((res: any) => {
           // TODO do this with commit()
           context.state.treeStack.push(clone(context.state.trees))
@@ -238,7 +191,9 @@ export default {
     // Blobs
     //
     setBlob (context: any, sha: string): any {
-      return context.state.repo.getBlob(sha)
+      return new GitHub({token: context.state.token})
+        .getRepo(context.state.ownerName, context.state.repositoryName)
+        .getBlob(sha)
         .then((res: any) => {
           context.commit('setContents', res.data)
           context.dispatch('plantumlEditor/renderUML', res.data, { root: true })
