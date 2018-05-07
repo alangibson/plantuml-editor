@@ -48,6 +48,7 @@
            </div>
          </div>
          <div class="modal-footer">
+           <button @click.prevent="refresh" type="button" class="btn btn-secondary">Refresh</button>
            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
          </div>
        </div>
@@ -74,6 +75,11 @@ export default {
         // Doesnt work: this.showModal = false
         $('#selectGithubRepoModal').modal('hide')
       }
+    },
+    // Reload GitHub state
+    refresh () {
+      this.$store.dispatch('github/listRepositories')
+      this.$store.dispatch('github/listBranches')
     }
   },
   mounted () {
@@ -86,7 +92,10 @@ export default {
     if (this.$store.state.github.token) {
       this.$store.dispatch('github/authenticateToken', this.$store.state.github.token)
         .then(() => {
+          console.log('Authentication succeeded')
+          // Set up the initial state
           this.$store.commit('github/settingsAuthenticationErrorMessage', '')
+          this.$store.dispatch('github/listRepositories')
           // Maybe set repository and editor contents based on url anchor tag
           // let [owner: string, repository: string, branch: string, ...file: string]: Array<string> = splitHash
           // let [owner: string, repository: string, treeSHA: string]: Array<string> = splitHash
