@@ -19,6 +19,7 @@
     "clipboard": "1.7.1",
     "dexie": "2.0.1",
     "dragscroll": "0.0.8",
+    "firebase-tools": "^3.18.4",
     "font-awesome": "4.7.0",
     "github-api": "^3.0.0",
     "jquery": "3.2.1",
