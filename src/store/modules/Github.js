@@ -94,6 +94,11 @@ export default {
         .getProfile()
         .then((res: any): any => {
           context.commit('settingsAuthenticationErrorMessage', '')
+          
+          // Load GitHub state
+          context.dispatch('listRepositories')
+          context.dispatch('listBranches')
+          
           return res
         })
         .catch((error: any) => {
@@ -102,6 +107,19 @@ export default {
             'Failed to authenticate you with GitHub. Please check your token.')
           throw error
         })
+    },
+    showGithubModal (context) {
+      // If no token, show settings instead
+      if (! context.state.token) {
+        $('#githubSettingsModal').modal('show')
+        return
+      }
+      // HACK
+      $('#selectGithubRepoModal').modal('show')
+    },
+    showGithubSettingsModal (context) {
+      // HACK
+      $('#githubSettingsModal').modal('show')
     },
     //
     // Repositories

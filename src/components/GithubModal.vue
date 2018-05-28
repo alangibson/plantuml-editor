@@ -3,14 +3,15 @@
      <div class="modal-dialog" role="document">
        <div class="modal-content">
          <div class="modal-header">
-           <h5 class="modal-title" id="exampleModalLongTitle">Modal title</h5>
+           <h3 class="modal-title">Open File from GitHub</h3>
            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
              <span aria-hidden="true">&times;</span>
            </button>
          </div>
          <div class="modal-body">
            <div>
-             {{$store.state.github.ownerName}}/{{$store.state.github.repositoryName}}/{{$store.state.github.branchName}}
+             <b>Current Branch</b>
+             {{$store.state.github.ownerName}} / {{$store.state.github.repositoryName}} / {{$store.state.github.branchName}}
            </div>
            <div class="container-fluid">
              <div class="col-sm-4">

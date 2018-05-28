@@ -116,10 +116,10 @@ export default {
      * Github support
      */
     selectGithubRepo () {
-      $('#selectGithubRepoModal').modal('show')
+      this.$store.dispatch('github/showGithubModal')
     },
     selectGithubSettings () {
-      $('#githubSettingsModal').modal('show')
+      this.$store.dispatch('github/showGithubSettingsModal')
     }
   }
 }
