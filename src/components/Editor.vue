@@ -17,6 +17,12 @@ import 'codemirror/addon/hint/show-hint.js'
 import '../lib/codemirror/mode/plantuml/plantuml.js'
 
 import 'codemirror/lib/codemirror.css'
+import 'codemirror/theme/ambiance.css'
+import 'codemirror/theme/elegant.css'
+import 'codemirror/theme/idea.css'
+import 'codemirror/theme/lucario.css'
+import 'codemirror/theme/mbo.css'
+import 'codemirror/theme/neo.css'
 import 'codemirror/theme/solarized.css'
 import 'codemirror/addon/hint/show-hint.css'
 

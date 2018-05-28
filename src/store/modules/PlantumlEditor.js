@@ -25,7 +25,7 @@ const state: any = {
   afterMarkdown: '',
   codemirrorOptions: {
     mode: 'plantuml',
-    theme: 'solarized dark',
+    theme: 'mbo',
     indentUnit: 2,
     tabSize: 2,
     indentWithTabs: false,
@@ -63,11 +63,6 @@ const state: any = {
   },
   showHTTPSWarning: true,
   showHotkeyTips: true
-// =======
-//     win: 'Ctrl-E',
-//     mac: 'Cmd-E'
-//   }
-// >>>>>>> master
 }
 
 const getters: any = {
