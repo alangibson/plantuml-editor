@@ -37,11 +37,11 @@ export default {
     showHotkeyTips (): boolean {
       return this.$store.state.plantumlEditor.showHotkeyTips
     },
-    url (): string {
+    url(): string {
       return this.$store.state.plantumlEditor.url
     }
   },
-  data (): any {
+  data(): any {
     return {
       winKey: this.$store.state.plantumlEditor.renderUMLKey.win,
       macKey: this.$store.state.plantumlEditor.renderUMLKey.mac,
