@@ -1,0 +1,77 @@
+{
+  "key": "power-plant-uml",
+  "name": "PowerPlant UML",
+  "description": "A powerful Plant UML editor",
+  "vendor": {
+    "name": "Me",
+    "url": "https://powerplantuml.firebaseapp.com"
+  },
+  "baseUrl": "{{localBaseUrl}}",
+  "links": {
+    "self": "{{localBaseUrl}}/atlassian-connect.json",
+    "homepage": "{{localBaseUrl}}/atlassian-connect.json"
+  },
+  "authentication": {
+    "type": "none"
+  },
+  "scopes": [
+    "read",
+    "write"
+  ],
+  "modules": {
+    "dynamicContentMacros": [
+      {
+        "key": "power-plant-uml-macro",
+        "name": {
+          "value": "PowerPlant UML"
+        },
+        "url": "/macro",
+        "description": {
+          "value": "PowerPlant UML Macro"
+        },
+        "outputType": "block",
+        "bodyType": "none",
+        "editor": {
+          "url": "/editor",
+          "editTitle": {
+            "value": "Edit PowerPlant UML"
+          },
+          "insertTitle": {
+            "value": "Insert PowerPlant UML"
+          },
+          "width": "100%",
+          "height": "100%"
+        }
+      }
+    ],
+    "dialogs": [
+      {
+        "url": "/dialog",
+        "options": {
+          "size": "fullscreen",
+          "header": {
+            "value": "PowerPlant UML Dialog"
+          },
+          "chrome": false,
+          "closeOnEscape": true
+        },
+        "key": "power-plant-uml-dialog"
+      }
+    ],
+    "webItems": [
+      {
+        "key": "dialog-web-item",
+        "name": {
+          "value": "dialog-web-item"
+        },
+        "location": "ppu.bonk",
+        "target": {
+          "type": "dialogmodule",
+          "options": {
+            "key": "power-plant-uml-dialog"
+          }
+        }
+      }
+    ]
+  }
+}

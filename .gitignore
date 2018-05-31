@@ -17,6 +17,7 @@ test/unit/coverage
 .idea
 node*
 docs/
+dist/
 
 # Editor directories and files
 .idea
