@@ -25,14 +25,28 @@
         "name": {
           "value": "PowerPlant UML"
         },
-        "url": "/macro",
+        "url": "/confluence/macro?url={url}",
         "description": {
           "value": "PowerPlant UML Macro"
         },
         "outputType": "block",
         "bodyType": "none",
+        "featured": true,
+        "parameters": [
+          {
+            "identifier": "url",
+            "name": {
+              "value": "URL"
+            },
+            "description": {
+              "value": "PlantUML URL."
+            },
+            "type": "string",
+            "required": true
+          }
+        ],
         "editor": {
-          "url": "/editor",
+          "url": "/confluence/editor",
           "editTitle": {
             "value": "Edit PowerPlant UML"
           },
@@ -56,21 +70,6 @@
           "closeOnEscape": true
         },
         "key": "power-plant-uml-dialog"
-      }
-    ],
-    "webItems": [
-      {
-        "key": "dialog-web-item",
-        "name": {
-          "value": "dialog-web-item"
-        },
-        "location": "ppu.bonk",
-        "target": {
-          "type": "dialogmodule",
-          "options": {
-            "key": "power-plant-uml-dialog"
-          }
-        }
       }
     ]
   }
