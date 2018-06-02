@@ -2,6 +2,7 @@
   <div class="navbar navbar-inverse navbar-static-top">
 
     <div class="container-fluid">
+
       <ul class="nav navbar-nav navbar-left">
         <li>
           <a href="#" @click.prevent="changeHistoryColSize">
@@ -9,9 +10,11 @@
           </a>
         </li>
       </ul>
+
       <div class="navbar-header">
         <a class="navbar-brand" href="#" @click.prevent>PlantUML Editor <span class="h6">beta</span></a>
       </div>
+
       <umlTemplate></umlTemplate>
 
       <!-- Github support -->
@@ -127,4 +130,24 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+.navbar-inverse {
+  background-color: rgb(44, 44, 44);
+  color: white;
+  box-shadow: 5px 10px;
+}
+.navbar {
+  box-shadow: 0 5px 2px 0 #2c2c2c;
+}
+.navbar-inverse .navbar-link {
+  color: #ffffec;
+}
+.navbar-inverse .navbar-nav > li > a {
+  color: #ffffec;
+}
+.navbar-inverse .navbar-brand {
+  color: #ffffec;
+}
+a.dropdown-toggle {
+  color: #ffffec;
+}
 </style>
