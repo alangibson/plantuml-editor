@@ -2,9 +2,6 @@
   <form class="form-inline">
     <div class="form-group">
       <label for="umlWidth">scale</label>
-<!--=======-->
-      <!--<label for="umlWidth">size&nbsp;</label>-->
-<!--&gt;>>>>>> master-->
       <input type="number" id="umlWidth" step="10" max="300" min="10" v-model="umlWidth" class="form-control" :disabled="!isSvg">
     </div>
     <div class="form-group">

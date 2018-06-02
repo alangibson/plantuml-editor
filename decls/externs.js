@@ -50,11 +50,19 @@ declare module 'codemirror/theme/mbo.css' {
   declare module.exports: any;
 }
 
+declare module 'codemirror/theme/mdn-like.css' {
+  declare module.exports: any;
+}
+
 declare module 'codemirror/theme/neo.css' {
   declare module.exports: any;
 }
 
 declare module 'codemirror/theme/solarized.css' {
+  declare module.exports: any;
+}
+
+declare module 'codemirror/theme/zenburn.css' {
   declare module.exports: any;
 }
 

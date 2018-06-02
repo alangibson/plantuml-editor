@@ -115,6 +115,9 @@ const mutations: any = {
         break
     }
   },
+  setCodeMirrorTheme(state: any, theme: string) {
+    state.codemirrorOptions.theme = theme
+  },
   getUmlWidthFromLocalStorage() {
     if (window.localStorage && window.localStorage.getItem('umlWidth')) {
       state.umlWidth = window.localStorage.getItem('umlWidth')
@@ -199,6 +202,9 @@ const actions: any = {
   syncCodeMirrorIndent(context: any, indent: string) {
     context.commit('setCodeMirrorIndent', indent)
     context.commit('setIndentLocalStrage', indent)
+  },
+  syncCodeMirrorTheme(context: any, theme: string) {
+    context.commit('setCodeMirrorTheme', theme)
   },
   setUmlWidth(context: any, umlWidth: number) {
     context.commit('setUmlWidth', umlWidth)

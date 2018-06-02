@@ -36,6 +36,16 @@
                 </label>
               </div>
             </div>
+            <div class="form-group">
+              <label class="col-sm-4 control-label" for="codeMirrorTheme">editor theme&nbsp;</label>
+              <div class="col-sm-8">
+                <select id="codeMirrorTheme" v-model="codeMirrorTheme" class="form-control">
+                  <option v-for="(option, index) in codeMirrorThemes" :value="option" :key="index">
+                    {{ option }}
+                  </option>
+                </select>
+              </div>
+            </div>
           </form>
         </div>
         <div class="modal-footer">
@@ -67,6 +77,41 @@ export default {
       set(value: string) {
         this.$store.dispatch('plantumlEditor/syncCodeMirrorIndent', value)
       }
+    },
+    codeMirrorTheme: {
+      get(): string {
+        return this.$store.state.plantumlEditor.codemirrorOptions.theme
+      },
+      set(value: string) {
+        this.$store.dispatch('plantumlEditor/syncCodeMirrorTheme', value)
+      }
+    },
+    codeMirrorThemes(): any {
+      // Best: monokai, lucario, mbo, railscast, seti, ttcn,
+      return [
+        'default',
+        '3024-day', '3024-night',
+        'abcdef', 'ambiance', 'ambiance-mobile',
+        'base16-dark', 'base16-light', 'bespin', 'blackboard',
+        'cobalt', 'colorforth',
+        'dracula', 'duotone-dark', 'duotone-light',
+        'eclipse', 'elegant', 'erlang-dark',
+        'gruvbox-dark',
+        'hopscotch',
+        'icecoder', 'idea', 'isotope',
+        'lesser-dark', 'liquibyte', 'lucario',
+        'material', 'mbo', 'mdn-like', 'midnight', 'monokai',
+        'neat', 'neo', 'night',
+        'oceanic-next',
+        'panda-syntax', 'paraiso-dark', 'paraiso-light', 'pastel-on-dark',
+        'railscasts', 'rubyblue',
+        'seti', 'shadowfox', 'solarized', 'ssms',
+        'the-matrix', 'tomorrow-night-bright', 'tomorrow-night-eighties', 'ttcn', 'twilight',
+        'vibrant-ink',
+        'xq-dark', 'xq-light',
+        'yeti',
+        'zenburn'
+      ]
     }
   }
 }
