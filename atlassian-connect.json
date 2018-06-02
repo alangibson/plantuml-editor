@@ -23,7 +23,7 @@
       {
         "key": "power-plant-uml-macro",
         "name": {
-          "value": "PowerPlant UML"
+          "value": "PowerPlantUML"
         },
         "url": "/confluence/macro?url={url}",
         "description": {
