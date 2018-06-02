@@ -29,3 +29,5 @@ docs/
 
 # flow-typed install でインストール出来るもの
 flow-typed
+
+dist/
