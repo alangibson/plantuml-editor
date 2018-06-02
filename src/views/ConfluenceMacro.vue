@@ -4,8 +4,5 @@
 
 <script>
 export default {
-  mounted () {
-    console.log('this.$route.query.url', this.$route.query.url)
-  }
 }
 </script>

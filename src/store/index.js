@@ -13,6 +13,7 @@ import umlTemplate from './modules/UmlTemplate'
 import cheatSheet from './modules/CheatSheet'
 import gistApi from './modules/GistApi'
 import github from './modules/Github'
+import confluence from './modules/Confluence'
 
 export default new Vuex.Store({
   modules: {
@@ -22,7 +23,8 @@ export default new Vuex.Store({
     umlTemplate,
     cheatSheet,
     gistApi,
-    github
+    github,
+    confluence
   },
   plugins: [createPersistedState()]
 })

@@ -10,12 +10,6 @@ const state: any = {
   fullSize: {
     'uml': false,
     previousColSize: null
-// =======
-//     history: 2,
-//     editor: 4,
-//     cheatSheet: 0,
-//     uml: 6
-// >>>>>>> master
   }
 }
 

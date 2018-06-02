@@ -15,92 +15,11 @@ import store from './store'
 import directive from './directive'
 import router from './routes'
 
-// components
-// import HeaderNavbar from './components/HeaderNavbar'
-// import HelpModal from './components/HelpModal'
-// import OptionsModal from './components/OptionsModal'
-// import GistModal from './components/GistModal'
-// import GithubModal from './components/GithubModal'
-// import GithubSettingsModal from './components/GithubSettingsModal'
-// import HistoryList from './components/HistoryList'
-// import CheatSheet from './components/CheatSheet'
-// import FunctionTop from './components/FunctionTop'
-// import Uml from './components/Uml'
-// import Editor from './components/Editor'
-
 export default {
   name: 'app',
   store,
   directive,
-  router,
-  // components: {
-  //   HeaderNavbar,
-  //   HelpModal,
-  //   OptionsModal,
-  //   GistModal,
-  //   HistoryList,
-  //   GithubModal,
-  //   GithubSettingsModal,
-  //   CheatSheet,
-  //   FunctionTop,
-  //   Uml,
-  //   Editor
-  // },
-  // computed: {
-  //   historyCol(): number {
-  //     return this.$store.state.layout.colSize.history
-  //   },
-  //   editorCol(): number {
-  //     return this.$store.state.layout.colSize.editor
-  //   },
-  //   cheatSheetCol(): number {
-  //     return this.$store.state.layout.colSize.cheatSheet
-  //   },
-  //   umlCol(): number {
-  //     return this.$store.state.layout.colSize.uml
-  //   }
-  // },
-  // data(): any {
-  //   return {
-  //     height: '0px',
-  //     umlH: '0px'
-  //   }
-  // },
-  // created() {
-  //   this.resize()
-  //   this.$store.dispatch('plantumlEditor/getLocalStrage')
-  //   this.$store.dispatch(
-  //     'plantumlEditor/renderUML',
-  //     this.$store.state.plantumlEditor.text
-  //   )
-  //   this.$store.dispatch('histories/defineScheme')
-  // },
-  // mounted() {
-  //   this.setHeight()
-  //   window.$('[data-toggle="tooltip"]').tooltip()
-  // },
-  // methods: {
-  //   setHeight() {
-  //     const headerHeight: number = window.$('.navbar-static-top').height()
-  //     const functionTopHeight: number = window.$('.functionTop').height()
-  //     const height: number = window.innerHeight - headerHeight
-  //     const marginTop: number = 20
-  //     const marginBottom: number = 10
-  //     this.height = height + 'px'
-  //     this.umlH = height - (marginTop + functionTopHeight + marginBottom) + 'px'
-  //   },
-  //   resize() {
-  //     let timer: any = null
-  //     window.addEventListener('resize', () => {
-  //       if (timer) {
-  //         clearTimeout(timer)
-  //       }
-  //       timer = setTimeout(() => {
-  //         this.setHeight()
-  //       }, this.$store.state.plantumlEditor.FPS)
-  //     })
-  //   }
-  // }
+  router
 }
 </script>
 

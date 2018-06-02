@@ -1,6 +1,6 @@
 <template>
   <div>
-    <headerNavbar></headerNavbar>
+    <headerNavbar :enableConfluence="enableConfluence"></headerNavbar>
     <div class="container-fluid">
       <div class="row">
         <div :class="[historyCol ? `col-sm-${historyCol}` : 'col-sm-2']" v-show="Boolean(historyCol)">
@@ -57,6 +57,9 @@ export default {
     Uml,
     Editor
   },
+  props: [
+    'enableConfluence'
+  ],
   computed: {
     historyCol(): number {
       return this.$store.state.layout.colSize.history
@@ -89,6 +92,15 @@ export default {
   mounted() {
     this.setHeight()
     window.$('[data-toggle="tooltip"]').tooltip()
+
+    // Look for a query param ?uml={..} or anchor #uml={...}
+    if (this.$route.query.uml) {
+      this.$store.dispatch('plantumlEditor/renderEncodedUML', this.$route.query.uml)
+    } else if (this.$route.hash) {
+      let ref: string = this.$route.hash.split('#')[1]
+      let encodedUml: string = ref.split('uml=').slice(1).join('uml=')
+      this.$store.dispatch('plantumlEditor/renderEncodedUML', encodedUml)
+    }
   },
   methods: {
     setHeight() {

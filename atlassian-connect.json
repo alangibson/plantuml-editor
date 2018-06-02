@@ -43,6 +43,17 @@
             },
             "type": "string",
             "required": true
+          },
+          {
+            "identifier": "encodedUML",
+            "name": {
+              "value": "Encoded PlantUML"
+            },
+            "description": {
+              "value": "Encoded PlantUML"
+            },
+            "type": "string",
+            "required": true
           }
         ],
         "editor": {
