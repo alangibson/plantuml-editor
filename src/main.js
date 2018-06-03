@@ -5,8 +5,10 @@
 import Vue from 'vue'
 import App from './App'
 import VueLazyload from 'vue-lazyload'
+import VueRouter from 'vue-router'
 
 Vue.use(VueLazyload)
+Vue.use(VueRouter)
 
 Vue.config.productionTip = false
 

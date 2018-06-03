@@ -50,6 +50,7 @@
           </ul>
         </li>
       </ul>
+
       <ul class="nav navbar-nav">
         <li>
           <a href="#" data-toggle="modal" data-target="#options">
@@ -57,6 +58,7 @@
           </a>
         </li>
       </ul>
+
       <ul class="nav navbar-nav">
         <li>
           <a href="#" data-toggle="modal" data-target="#help">
@@ -64,13 +66,27 @@
           </a>
         </li>
       </ul>
-      <div class="navbar-header navbar-right">
+
+      <!-- Conditionally display Confluence buttons -->
+      <ul v-if="enableConfluence"
+          class="nav navbar-nav navbar-right">
+        <li class="nav-item">
+          <a class="nav-link" @click.prevent="cancelConfluence">Cancel</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" @click.prevent="saveConfluence">Save</a>
+        </li>
+      </ul>
+
+      <div v-if="! enableConfluence"
+           class="navbar-header navbar-right">
         <ul class="navbar-text list-inline">
           <li><a href="https://github.com/kkeisuke/plantuml-editor" class="navbar-link" target="_blank"><i class="fa fa-github fa-lg"></i></a></li>
           <li><a href="https://twitter.com/kkeisuke" class="navbar-link" target="_blank"><i class="fa fa-twitter fa-lg"></i></a></li>
           <li><a href="http://kkeisuke.com/" class="navbar-link" target="_blank"><i class="fa fa-home fa-lg"></i></a></li>
         </ul>
       </div>
+
     </div>
   </div>
 </template>
@@ -86,6 +102,12 @@ export default {
   components: {
     UmlTemplate,
     Github
+  },
+  props: [
+    'enableConfluence'
+  ],
+  data () {
+    return {}
   },
   computed: {
     isCloseHistory(): string {
@@ -122,6 +144,15 @@ export default {
     },
     selectGithubSettings () {
       this.$store.dispatch('github/showGithubSettingsModal')
+    },
+    /*
+     * Confluence support
+     */
+    cancelConfluence () {
+      this.$store.dispatch('confluence/cancel')
+    },
+    saveConfluence () {
+      this.$store.dispatch('confluence/save')
     }
   }
 }

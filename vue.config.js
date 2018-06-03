@@ -14,6 +14,9 @@ module.exports = {
         'window.jQuery': 'jquery',
         'window.$': 'jquery'
       })
-    ]
+    ],
+    externals: {
+      'atlassian-connect': 'AP'
+    }
   }
 }

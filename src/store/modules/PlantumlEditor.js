@@ -1,6 +1,6 @@
 /* @flow */
 
-import plantumlEncoder from 'plantuml-encoder'
+import plantumlEncoder from 'plantuml-encoder-decoder'
 import axios from 'axios'
 import lodash from 'lodash'
 import marked from 'marked'
@@ -238,6 +238,10 @@ const actions: any = {
     context.commit('renderUML', text)
     context.commit('renderMarkdown', text)
     context.commit('setLocalStrage', text)
+  },
+  renderEncodedUML(context: any, encodedUML: string) {
+    let text = plantumlEncoder.decode(encodedUML)
+    context.dispatch('renderUML', text)
   },
   download({ state }: any) {
     const ext: any = _.find(state.umlExtensions, { text: state.umlExtension })

@@ -1,0 +1,87 @@
+{
+  "key": "power-plant-uml",
+  "name": "PowerPlant UML",
+  "description": "A powerful Plant UML editor",
+  "vendor": {
+    "name": "Me",
+    "url": "https://powerplantuml.firebaseapp.com"
+  },
+  "baseUrl": "{{localBaseUrl}}",
+  "links": {
+    "self": "{{localBaseUrl}}/atlassian-connect.json",
+    "homepage": "{{localBaseUrl}}/atlassian-connect.json"
+  },
+  "authentication": {
+    "type": "none"
+  },
+  "scopes": [
+    "read",
+    "write"
+  ],
+  "modules": {
+    "dynamicContentMacros": [
+      {
+        "key": "power-plant-uml-macro",
+        "name": {
+          "value": "PowerPlantUML"
+        },
+        "url": "/confluence/macro?url={url}",
+        "description": {
+          "value": "PowerPlant UML Macro"
+        },
+        "outputType": "block",
+        "bodyType": "none",
+        "featured": true,
+        "parameters": [
+          {
+            "identifier": "url",
+            "name": {
+              "value": "URL"
+            },
+            "description": {
+              "value": "PlantUML URL."
+            },
+            "type": "string",
+            "required": true
+          },
+          {
+            "identifier": "encodedUML",
+            "name": {
+              "value": "Encoded PlantUML"
+            },
+            "description": {
+              "value": "Encoded PlantUML"
+            },
+            "type": "string",
+            "required": true
+          }
+        ],
+        "editor": {
+          "url": "/confluence/editor",
+          "editTitle": {
+            "value": "Edit PowerPlant UML"
+          },
+          "insertTitle": {
+            "value": "Insert PowerPlant UML"
+          },
+          "width": "100%",
+          "height": "100%"
+        }
+      }
+    ],
+    "dialogs": [
+      {
+        "url": "/dialog",
+        "options": {
+          "size": "fullscreen",
+          "header": {
+            "value": "PowerPlant UML Dialog"
+          },
+          "chrome": false,
+          "closeOnEscape": true
+        },
+        "key": "power-plant-uml-dialog"
+      }
+    ]
+  }
+}
