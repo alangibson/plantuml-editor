@@ -8,14 +8,8 @@ const state: any = {
     uml: 6
   },
   fullSize: {
-    'uml': false,
+    uml: false,
     previousColSize: null
-// =======
-//     history: 2,
-//     editor: 4,
-//     cheatSheet: 0,
-//     uml: 6
-// >>>>>>> master
   }
 }
 
@@ -76,10 +70,10 @@ const actions: any = {
     } else {
       context.state.fullSize.previousColSize = JSON.parse(JSON.stringify(context.state.colSize))
       context.commit('setColSize', {
-        'history': 0,
-        'editor': 0,
-        'cheatSheet': 0,
-        'uml': 12
+        history: 0,
+        editor: 0,
+        cheatSheet: 0,
+        uml: 12
       })
     }
     context.state.fullSize.uml = !context.state.fullSize.uml
