@@ -34,6 +34,7 @@ export default {
     trees: {},
     // History of tree navigation
     treeStack: [],
+    repoBranchStack: [],
     // Blob contents
     contents: null,
     settingsAuthenticationErrorMessage: ''
@@ -60,10 +61,18 @@ export default {
       state.branchName = branchName
     },
     setRepo (state: any, repo: any) {
+      // Push current selection onto stack
+      state.repoBranchStack.push({
+        ownerName: state.ownerName,
+        repositoryName: state.repositoryName,
+        branchName: state.branchName
+      })
+      // Set new selection
       state.repo = repo
       state.ownerName = repo.owner.login
       state.repositoryName = repo.name
       state.branchName = repo.default_branch
+
     },
     setBranchName (state: any, branchName: string) {
       state.branchName = branchName
@@ -135,8 +144,14 @@ export default {
     // Set active repository. Also sets the default branch.
     setRepo (context: any, repo: any) {
       context.commit('setRepo', repo)
+      // Load up trees of default branch
+      // Branch will have been set by setRepo
+      // console.log('repo.default_branch', repo.default_branch)
       context.dispatch('clearBranches')
-      context.dispatch('listBranches')
+        .then(() => {
+          context.dispatch('listBranches')
+          context.dispatch('setBranchName', repo.default_branch)
+        })
     },
     setRepository (context: any, { ownerName, repositoryName }: { ownerName: string, repositoryName: string }): Promise<*> {
       context.dispatch('clearBranches')
@@ -162,6 +177,10 @@ export default {
     },
     setBranch (context: any, branch: any) {
       context.commit('setBranch', branch)
+      context.dispatch('listTrees')
+    },
+    setBranchName (context: any, branchName: string) {
+      context.commit('setBranchName', branchName)
       context.dispatch('listTrees')
     },
     clearBranches (context: any) {
@@ -199,7 +218,12 @@ export default {
     },
     backTree (context: any) {
       // TODO do this with commit()
+      let repoBranch: any = context.state.repoBranchStack.pop()
       let trees: any = context.state.treeStack.pop()
+      console.log('popped repoBranch', JSON.stringify(repoBranch))
+      if (repoBranch) {
+        context.commit('setRepositoryBranch', repoBranch)
+      }
       if (trees) {
         // context.state.trees = trees
         context.commit('setTree', trees)

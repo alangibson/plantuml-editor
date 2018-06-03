@@ -2,20 +2,18 @@
    <div id="selectGithubRepoModal" class="modal fade">
      <div class="modal-dialog" role="document">
        <div class="modal-content">
+
          <div class="modal-header">
-           <h3 class="modal-title">Open File from GitHub</h3>
-           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-             <span aria-hidden="true">&times;</span>
-           </button>
+           <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
+           <div class="h3 modal-title">GitHub <small>Open File</small></div>
          </div>
+
          <div class="modal-body">
-           <div>
-             <b>Current Branch</b>
-             {{$store.state.github.ownerName}} / {{$store.state.github.repositoryName}} / {{$store.state.github.branchName}}
-           </div>
            <div class="container-fluid">
              <div class="col-sm-4">
-               <ul>
+
+               <!-- Left-hand list of repos and and branches -->
+               <ul id="repo-branch-list" class="menu-list">
                  <li v-for="repo in $store.state.github.repositories" :key="repo.id">
                    <a @click="$store.dispatch('github/setRepo', repo)">
                      {{ repo.full_name }}
@@ -27,31 +25,53 @@
                    </ul>
                  </li>
                </ul>
+
              </div>
-             <div class="col-sm-8">
-               <button @click.stop="$store.dispatch('github/backTree')">^</button>
+             <div v-if="hasSelection"
+                  class="col-sm-8">
+
+               <!-- Back button -->
+               <a @click.stop="$store.dispatch('github/backTree')">
+                 <i class="fa fa-arrow-circle-left"></i>
+               </a>
+
+               <!-- Currently selected repo and branch -->
+               {{$store.state.github.ownerName}} / {{$store.state.github.repositoryName}} / {{$store.state.github.branchName}}
+
                <div v-if="$store.state.github.trees.branchName"
-                    class="container-fluid">
-                 <div v-for="tree in $store.state.github.trees.tree" :key="tree.sha"
+                    class="container-fluid menu-list">
+                 <div v-for="tree in treesInSelectedBranch" :key="tree.sha"
                       class="row">
-                   <div class="col-sm-4">
+
+                   <div class="col-sm-1">
+                     <i v-if="tree.type === 'tree'"
+                        class="fa fa-folder-open">
+                     </i>
+                     <i v-else-if="tree.type === 'blob'"
+                        class="fa fa-file">
+                     </i>
+                   </div>
+                   <div class="col-sm-5">
                      <a @click.stop="openTree(tree)">{{tree.path}}</a>
                    </div>
-                   <div class="col-sm-4">
+                   <div class="col-sm-3">
                      {{tree.type}}
                    </div>
-                   <div class="col-sm-4">
+                   <div class="col-sm-3">
                      {{tree.size}}
                    </div>
                  </div>
                </div>
+
              </div>
            </div>
          </div>
+
          <div class="modal-footer">
            <button @click.prevent="refresh" type="button" class="btn btn-secondary">Refresh</button>
            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
          </div>
+
        </div>
      </div>
    </div>
@@ -61,6 +81,22 @@
 import $ from 'jquery'
 
 export default {
+  computed: {
+    treesInSelectedBranch(): Array<any> {
+      return this.$store.state.github.trees.tree
+        .concat()
+        .sort((a, b) => {
+          if (a.type === 'tree') {
+            return -1
+          } else {
+            return 1
+          }
+        })
+    },
+    hasSelection(): boolean {
+      return !! this.$store.state.github.ownerName
+    }
+  },
   methods: {
     openTree (tree: any) {
       if (tree.type === 'tree') {
@@ -78,12 +114,12 @@ export default {
       }
     },
     // Reload GitHub state
-    refresh () {
+    refresh() {
       this.$store.dispatch('github/listRepositories')
       this.$store.dispatch('github/listBranches')
     }
   },
-  mounted () {
+  mounted() {
     console.log('mounted')
     // Split anchor
     let splitHash: Array<string> = window.location.hash.slice(1).split('/')
@@ -131,5 +167,9 @@ export default {
 <style scoped>
 #selectGithubRepoModal .modal-dialog {
   width: 120rem;
+}
+
+.menu-list a {
+ cursor: pointer;
 }
 </style>

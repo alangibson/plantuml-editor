@@ -94,6 +94,7 @@ export default {
     window.$('[data-toggle="tooltip"]').tooltip()
 
     // Look for a query param ?uml={..} or anchor #uml={...}
+    // FIXME getting error with #github/
     if (this.$route.query.uml) {
       this.$store.dispatch('plantumlEditor/renderEncodedUML', this.$route.query.uml)
     } else if (this.$route.hash) {

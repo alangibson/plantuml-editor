@@ -24,8 +24,17 @@
             <span class="glyphicon glyphicon-info-sign"></span> github <b class="caret"></b>
           </a>
           <ul class="dropdown-menu">
-            <li><a href="#selectGithubRepo" @click.prevent="selectGithubRepo">Open</a></li>
-            <li><a href="#selectGithubSettings" @click.prevent="selectGithubSettings">Settings</a></li>
+            <li>
+              <a href="#selectGithubRepo" @click.prevent="selectGithubRepo">Open File</a>
+            </li>
+            <li>
+              <a v-if="umlExtension==='svg'"
+                 href="#createGist" @click.prevent="showGistModal">Create Gist</a>
+              <a v-else style="color: grey;" @click.prevent="">Create Gist (SVG Only)</a>
+            </li>
+            <li>
+              <a href="#selectGithubSettings" @click.prevent="selectGithubSettings">Settings</a>
+            </li>
           </ul>
         </li>
       </ul>
@@ -112,6 +121,11 @@ export default {
   computed: {
     isCloseHistory(): string {
       return this.$store.getters['layout/isCloseHistory']
+    },
+    umlExtension: {
+      get(): string {
+        return this.$store.state.plantumlEditor.umlExtension
+      }
     }
   },
   methods: {
@@ -144,6 +158,9 @@ export default {
     },
     selectGithubSettings () {
       this.$store.dispatch('github/showGithubSettingsModal')
+    },
+    showGistModal() {
+      window.$('#gist').modal('show')
     },
     /*
      * Confluence support

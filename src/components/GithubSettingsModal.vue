@@ -4,7 +4,7 @@
       <div class="modal-content">
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
-          <div class="h3 modal-title">GitHub Settings</div>
+          <div class="h3 modal-title">GitHub <small>Settings</small></div>
         </div>
         <div class="modal-body">
           <div v-if="settingsAuthenticationErrorMessage" class="alert alert-danger" role="alert">
