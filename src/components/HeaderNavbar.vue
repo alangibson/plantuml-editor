@@ -80,7 +80,6 @@
 
 import UmlTemplate from './UmlTemplate'
 import Github from './GithubModal'
-import $ from 'jquery'
 
 export default {
   name: 'headerNavbar',
