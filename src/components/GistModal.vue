@@ -121,10 +121,10 @@ export default {
     },
     token: {
       get(): string {
-        return this.$store.state.gistApi.token
+        return this.$store.state.github.token
       },
       set(value: string) {
-        this.$store.dispatch('gistApi/setToken', value)
+        this.$store.dispatch('github/setToken', value)
       }
     },
     ext(): any {

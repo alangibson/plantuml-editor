@@ -78,7 +78,13 @@ const actions = {
         throw error
       })
   },
-  
+  /**
+   * Just set token without doing any sort of authentication.
+   * Currently only used for Gist support.
+   */
+  setToken(context: any, token: string) {
+    context.commit('setToken', token)
+  },
   //
   // Repositories
   //

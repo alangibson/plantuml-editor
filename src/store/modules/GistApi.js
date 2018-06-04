@@ -4,7 +4,6 @@ import axios from 'axios'
 
 const state: any = {
   api: 'https://api.github.com/gists',
-  token: '',
   isSending: false,
   gistUrl: '',
   errorMsg: '',
@@ -30,9 +29,6 @@ const state: any = {
 }
 
 const mutations: any = {
-  setToken(state: any, token: string) {
-    state.token = token
-  },
   setDescription(state: any, description: string) {
     state.gist.description = description
   },
@@ -68,9 +64,6 @@ const mutations: any = {
 }
 
 const actions: any = {
-  setToken(context: any, token: string) {
-    context.commit('setToken', token)
-  },
   setDescription(context: any, description: string) {
     context.commit('setDescription', description)
   },
@@ -92,7 +85,7 @@ const actions: any = {
       }
     })
   },
-  createGist({ state, commit, dispatch }: any, data: any) {
+  createGist({ state, commit, dispatch, rootState }: any, data: any) {
     // 送信中フラグ ON
     commit('startSending')
 
@@ -110,7 +103,7 @@ const actions: any = {
         if (Object.keys(state.gist.files).length >= 2) {
           // Gist 投稿
           axios
-            .post(`${state.api}?access_token=${state.token}`, state.gist)
+            .post(`${state.api}?access_token=${rootState.github.token}`, state.gist)
             .then((response: any) => {
               commit('setGistURL', response.data.html_url)
               commit('stopSending')

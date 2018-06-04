@@ -17,6 +17,9 @@
                 <label>
                   <input name="githubApiKey" v-model="githubApiKey">
                 </label>
+                <span class="help-block">
+                  <a href="https://help.github.com/articles/creating-a-personal-access-token-for-the-command-line/" target="_blank">Creating a personal access token</a>
+                </span>
               </div>
             </div>
           </form>
