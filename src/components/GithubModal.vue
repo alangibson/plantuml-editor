@@ -15,12 +15,12 @@
                <!-- Left-hand list of repos and and branches -->
                <ul id="repo-branch-list" class="menu-list">
                  <li v-for="repo in $store.state.github.repositories" :key="repo.id">
-                   <a @click="$store.dispatch('github/setRepo', repo)">
+                   <a @click="setRepository(repo)">
                      {{ repo.full_name }}
                    </a>
                    <ul v-if="repo.name === $store.state.github.repositoryName">
                      <li v-for="branch in $store.state.github.branches">
-                       <a @click.stop="$store.dispatch('github/setBranch', branch)">{{ branch.name }}</a>
+                       <a @click.stop="setBranch(branch)">{{ branch.name }}</a>
                      </li>
                    </ul>
                  </li>
@@ -38,7 +38,7 @@
                <!-- Currently selected repo and branch -->
                {{$store.state.github.ownerName}} / {{$store.state.github.repositoryName}} / {{$store.state.github.branchName}}
 
-               <div v-if="$store.state.github.trees.branchName"
+               <div v-if="$store.state.github.tree.branchName"
                     class="container-fluid menu-list">
                  <div v-for="tree in treesInSelectedBranch" :key="tree.sha"
                       class="row">
@@ -83,7 +83,7 @@ import $ from 'jquery'
 export default {
   computed: {
     treesInSelectedBranch(): Array<any> {
-      return this.$store.state.github.trees.tree
+      return this.$store.state.github.tree.tree
         .concat()
         .sort((a, b) => {
           if (a.type === 'tree') {
@@ -98,11 +98,32 @@ export default {
     }
   },
   methods: {
-    openTree (tree: any) {
+    setRepository(repo: any) {
+      this.$store.commit('github/pushHistory')
+      this.$store.dispatch('github/setRepository', repo)
+        .then(() => {
+          this.$store.dispatch('github/clearBranches')
+            .then(() => {
+              this.$store.dispatch('github/listSelectedRepoBranches')
+              this.$store.dispatch('github/setBranchByName', repo.default_branch)
+                .then(() => {
+                  this.$store.dispatch('github/getHeadTreeOfSelectedBranch')
+                })
+            })
+        })
+    },
+    setBranch(branch: any) {
+      this.$store.commit('github/pushHistory')
+      this.$store.dispatch('github/setBranch', branch)
+        .then(() => {
+          this.$store.dispatch('github/getHeadTreeOfSelectedBranch')
+        })
+    },
+    openTree(tree: any) {
       if (tree.type === 'tree') {
-        this.$store.dispatch('github/setTree', tree.sha)
+        this.$store.dispatch('github/setTreeBySHA', tree.sha)
       } else if (tree.type === 'blob') {
-        this.$store.dispatch('github/setBlob', tree.sha)
+        this.$store.dispatch('github/setBlobBySHA', tree.sha)
         // Set window.location.hash
         window.location.hash = '#github' +
                                '/' + this.$store.state.github.ownerName +
@@ -116,7 +137,7 @@ export default {
     // Reload GitHub state
     refresh() {
       this.$store.dispatch('github/listRepositories')
-      this.$store.dispatch('github/listBranches')
+      this.$store.dispatch('github/listSelectedRepoBranches')
     }
   },
   mounted() {
@@ -137,11 +158,11 @@ export default {
           // let [owner: string, repository: string, branch: string, ...file: string]: Array<string> = splitHash
           // let [owner: string, repository: string, treeSHA: string]: Array<string> = splitHash
           if (splitHash[0] === 'github') {
-            this.$store.dispatch('github/setRepository', {ownerName: splitHash[1], repositoryName: splitHash[2]})
+            this.$store.dispatch('github/setRepositoryByName', {ownerName: splitHash[1], repositoryName: splitHash[2]})
               .then(() => {
                 if (splitHash.length === 4) {
                   // Support splitHash[2] == tree sha
-                  this.$store.dispatch('github/setBlob', splitHash[3])
+                  this.$store.dispatch('github/setBlobBySHA', splitHash[3])
                 } else {
                   // Support splitHash[2] == ref and everything else is file path (like GitHub raw urls)
                   this.$store.dispatch('github/setContents', {ref: splitHash[3], path: path})

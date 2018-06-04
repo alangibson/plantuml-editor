@@ -6,247 +6,289 @@ function clone (o: any): any {
   return JSON.parse(JSON.stringify(o))
 }
 
-export default {
-  namespaced: true,
-  state: {
-    // GitHub authentication token
-    token: null,
-    // Owner is either a User or Organization
-    owner: null,
-    ownerName: null,
-    owners: [],
-    // Authenticated User object
-    user: null,
-    // Users profile data
-    userProfile: null,
-    repositoryName: null,
-    branchName: null,
-    // List of repos from last listRepositories
-    repositories: [],
-    repo: null,
-    // Branches in current repo
-    branches: [],
-    // Organizations user is a member of
-    organizations: [],
-    // Concatenation of organizations and username
-    // owners: [],
-    // Currently selected trees
-    trees: {},
-    // History of tree navigation
-    treeStack: [],
-    repoBranchStack: [],
-    // Blob contents
-    contents: null,
-    settingsAuthenticationErrorMessage: ''
-  },
-  mutations: {
-    setToken (state: any, token: string) {
-      state.token = token
-    },
-    setOwnerName (state: any, ownerName: string) {
-      state.ownerName = ownerName
-    },
-    setOwner (state: any, owner: any) {
-      state.owner = owner
-    },
-    setRepositoryName (state: any, repositoryName: string) {
-      state.repositoryName = repositoryName
-    },
-    setRepositories (state: any, repositories: Array<any>) {
-      state.repositories = repositories
-    },
-    setRepositoryBranch (state: any, {ownerName, repositoryName, branchName}: {ownerName: string, repositoryName: string, branchName: string}) {
-      state.ownerName = ownerName
-      state.repositoryName = repositoryName
-      state.branchName = branchName
-    },
-    setRepo (state: any, repo: any) {
-      // Push current selection onto stack
-      state.repoBranchStack.push({
-        ownerName: state.ownerName,
-        repositoryName: state.repositoryName,
-        branchName: state.branchName
-      })
-      // Set new selection
-      state.repo = repo
-      state.ownerName = repo.owner.login
-      state.repositoryName = repo.name
-      state.branchName = repo.default_branch
+const state = {
+  // GitHub authentication token
+  token: null,
+  // Currently selected repository owner
+  ownerName: null,
+  // Currently selected repository
+  repositoryName: null,
+  // Currently selected repository branch
+  branchName: null,
+  // History of navigation
+  historyStack:  [],
+  // Github repo object of currently selected repo
+  repo: null,
+  // List of repos user can access from last call to listRepositories
+  repositories: [],
+  // Branches in current repo
+  branches: [],
+  // Currently selected branch
+  branch: null,
+  // Currently selected tree
+  tree: {},
+  // Blob contents
+  contents: null,
+  // Authentication error message to be display on settings modal
+  settingsAuthenticationErrorMessage: ''
+}
 
-    },
-    setBranchName (state: any, branchName: string) {
-      state.branchName = branchName
-    },
-    setBranch (state: any, branch: any) {
-      state.branch = branch
-      state.branchName = branch.name
-    },
-    setBranches (state: any, branches: Array<any>) {
-      state.branches = branches
-    },
-    setTree (state: any, tree: any) {
-      state.trees = tree
-    },
-    setContents (state: any, contents: string) {
-      state.contents = contents
-    },
-    settingsAuthenticationErrorMessage (state: any, message: string) {
-      state.settingsAuthenticationErrorMessage = message
-    }
-  },
-  actions: {
-    authenticateToken (context: any, token: string): Promise<*> {
-      context.commit('setToken', token)
-      // See if token is valid
-      return new GitHub({token: token})
-        .getUser()
-        .getProfile()
-        .then((res: any): any => {
-          context.commit('settingsAuthenticationErrorMessage', '')
-          
-          // Load GitHub state
-          context.dispatch('listRepositories')
-          context.dispatch('listBranches')
-          
-          return res
-        })
-        .catch((error: any) => {
-          console.error(error)
-          context.commit('settingsAuthenticationErrorMessage',
-            'Failed to authenticate you with GitHub. Please check your token.')
-          throw error
-        })
-    },
-    showGithubModal (context) {
-      // If no token, show settings instead
-      if (! context.state.token) {
-        $('#githubSettingsModal').modal('show')
-        return
-      }
-      // HACK
-      $('#selectGithubRepoModal').modal('show')
-    },
-    showGithubSettingsModal (context) {
-      // HACK
+const actions = {
+  //
+  // Presentation and display
+  //
+  
+  showGithubModal (context) {
+    // If no token, show settings instead
+    if (! context.state.token) {
       $('#githubSettingsModal').modal('show')
-    },
-    //
-    // Repositories
-    //
-    listRepositories (context: any): Promise<*> {
-      return new GitHub({token: context.state.token})
-        .getUser()
-        .listRepos()
-        .then((res: any) => {
-          context.commit('setRepositories', res.data)
-        })
-    },
-    // Set active repository. Also sets the default branch.
-    setRepo (context: any, repo: any) {
-      context.commit('setRepo', repo)
-      // Load up trees of default branch
-      // Branch will have been set by setRepo
-      // console.log('repo.default_branch', repo.default_branch)
-      context.dispatch('clearBranches')
-        .then(() => {
-          context.dispatch('listBranches')
-          context.dispatch('setBranchName', repo.default_branch)
-        })
-    },
-    setRepository (context: any, { ownerName, repositoryName }: { ownerName: string, repositoryName: string }): Promise<*> {
-      context.dispatch('clearBranches')
-      context.dispatch('listBranches')
-      return new GitHub({token: context.state.token})
-        .getRepo(ownerName, repositoryName)
-        .getDetails()
-        .then((res: any): any => {
-          context.commit('setRepo', res.data)
-          return res
-        })
-    },
-    //
-    // Branches
-    //
-    listBranches (context: any): Promise<*> {
-      return new GitHub({token: context.state.token})
-        .getRepo(context.state.ownerName, context.state.repositoryName)
-        .listBranches()
-        .then((res: any) => {
-          context.commit('setBranches', res.data)
-        })
-    },
-    setBranch (context: any, branch: any) {
-      context.commit('setBranch', branch)
-      context.dispatch('listTrees')
-    },
-    setBranchName (context: any, branchName: string) {
-      context.commit('setBranchName', branchName)
-      context.dispatch('listTrees')
-    },
-    clearBranches (context: any) {
-      context.commit('setBranches', [])
-    },
-    //
-    // Trees
-    //
-    listTrees (context: any): Promise<*> {
-      return new GitHub({token: context.state.token})
-        .getRepo(context.state.ownerName, context.state.repositoryName)
-        .getTree(context.state.branchName)
-        .then((res: any) => {
-          // TODO do this with commit()
-          context.state.treeStack.push(clone(context.state.trees))
-          let trees: any = clone(res.data)
-          trees.branchName = context.state.branchName
-          // context.state.trees = trees
-          context.commit('setTree', trees)
-        })
-    },
-    setTree (context: any, sha: string): Promise<*> {
-      return new GitHub({token: context.state.token})
-        .getRepo(context.state.ownerName, context.state.repositoryName)
-        .getTree(sha)
-        .then((res: any) => {
-          // TODO do this with commit()
-          context.state.treeStack.push(clone(context.state.trees))
-          let trees: any = clone(res.data)
-          // TODO invalid assumption?
-          trees.branchName = context.state.branchName
-          // context.state.trees = trees
-          context.commit('setTree', trees)
-        })
-    },
-    backTree (context: any) {
-      // TODO do this with commit()
-      let repoBranch: any = context.state.repoBranchStack.pop()
-      let trees: any = context.state.treeStack.pop()
-      console.log('popped repoBranch', JSON.stringify(repoBranch))
-      if (repoBranch) {
-        context.commit('setRepositoryBranch', repoBranch)
-      }
-      if (trees) {
-        // context.state.trees = trees
-        context.commit('setTree', trees)
-      }
-    },
-    //
-    // Blobs
-    //
-    setBlob (context: any, sha: string): any {
-      return new GitHub({token: context.state.token})
-        .getRepo(context.state.ownerName, context.state.repositoryName)
-        .getBlob(sha)
-        .then((res: any) => {
-          context.commit('setContents', res.data)
-          context.dispatch('plantumlEditor/renderUML', res.data, { root: true })
-        })
-    },
-    setContents (context: any, {ref, path}: {ref: string, path: string}): any {
-      return context.state.repo.getContents(ref, path, true)
-        .then((res: any) => {
-          context.commit('setContents', res.data)
-          context.dispatch('plantumlEditor/renderUML', res.data, { root: true })
-        })
+      return
+    }
+    // HACK
+    $('#selectGithubRepoModal').modal('show')
+  },
+  showGithubSettingsModal (context) {
+    // HACK
+    $('#githubSettingsModal').modal('show')
+  },
+  
+  //
+  // Authentication
+  //
+  
+  /**
+   * Set GitHub authentication token and load up repositories user can access
+   */
+  authenticateToken (context: any, token: string): Promise<*> {
+    context.commit('setToken', token)
+    // See if token is valid
+    return new GitHub({token: token})
+      .getUser()
+      .getProfile()
+      .then((res: any): any => {
+        context.commit('settingsAuthenticationErrorMessage', '')
+        // Load GitHub state
+        context.dispatch('listRepositories')
+        return res
+      })
+      .catch((error: any) => {
+        console.error(error)
+        context.commit('settingsAuthenticationErrorMessage',
+          'Failed to authenticate you with GitHub. Please check your token.')
+        throw error
+      })
+  },
+  
+  //
+  // Repositories
+  //
+  
+  /**
+   * Load up repositories user can access
+   */
+  listRepositories (context: any): Promise<*> {
+    return new GitHub({token: context.state.token})
+      .getUser()
+      .listRepos()
+      .then((res: any) => {
+        context.commit('setRepositories', res.data)
+      })
+  },
+  /**
+   * Set active repository from GitHub repo object. Also sets the default branch.
+   */
+  setRepository (context: any, repo: any) {
+    context.commit('setRepository', repo)
+  },
+  /**
+   * Set repo by owner name and repository name.
+   * Useful for jumping to a repo based on URL anchor.
+   */
+  setRepositoryByName (context: any, { ownerName, repositoryName }: { ownerName: string, repositoryName: string }): Promise<*> {
+    return new GitHub({token: context.state.token})
+      .getRepo(ownerName, repositoryName)
+      .getDetails()
+      .then((res: any): any => {
+        context.dispatch('setRepository', res.data)
+        return res
+      })
+  },
+  
+  //
+  // Branches
+  //
+  
+  /**
+   * List all branches in currently selected repo.
+   */
+  listSelectedRepoBranches (context: any): Promise<*> {
+    return new GitHub({token: context.state.token})
+      .getRepo(context.state.ownerName, context.state.repositoryName)
+      .listBranches()
+      .then((res: any) => {
+        context.commit('setBranches', res.data)
+      })
+  },
+  setBranch (context: any, branch: any) {
+    context.commit('setBranch', branch)
+  },
+  /**
+   * Set selected branch in selected repo by branch name.
+   */
+  setBranchByName (context: any, branchName: string): Promise<*> {
+    return new GitHub({token: context.state.token})
+      .getRepo(context.state.ownerName, context.state.repositoryName)
+      .getBranch(branchName)
+      .then((res: any): any => {
+        context.dispatch('setBranch', res.data)
+        return res
+      })
+  },
+  clearBranches (context: any) {
+    context.commit('setBranches', [])
+  },
+  
+  //
+  // Trees
+  //
+  
+  setTree(context: any, tree: any) {
+    context.commit('setTree', tree)
+  },
+  /**
+   * Get tree of selected branch head.
+   */
+  getHeadTreeOfSelectedBranch(context: any): Promise<*> {
+    return new GitHub({token: context.state.token})
+      .getRepo(context.state.ownerName, context.state.repositoryName)
+      .getTree(context.state.branchName)
+      .then((res: any) => {
+        // Set the head tree for this branch
+        let tree: any = clone(res.data)
+        tree.branchName = context.state.branchName
+        context.dispatch('setTree', tree)
+      })
+  },
+  setTreeBySHA (context: any, sha: string): Promise<*> {
+    return new GitHub({token: context.state.token})
+      .getRepo(context.state.ownerName, context.state.repositoryName)
+      .getTree(sha)
+      .then((res: any) => {
+        // Set new tree
+        let tree: any = clone(res.data)
+        tree.branchName = context.state.branchName
+        context.dispatch('setTree', tree)
+      })
+  },
+
+  //
+  // Blobs
+  //
+
+  setBlobBySHA (context: any, sha: string): any {
+    return new GitHub({token: context.state.token})
+      .getRepo(context.state.ownerName, context.state.repositoryName)
+      .getBlob(sha)
+      .then((res: any) => {
+        context.commit('setContents', res.data)
+        context.dispatch('plantumlEditor/renderUML', res.data, { root: true })
+      })
+  },
+  setContents (context: any, {ref, path}: {ref: string, path: string}): any {
+    return context.state.repo.getContents(ref, path, true)
+      .then((res: any) => {
+        context.commit('setContents', res.data)
+        context.dispatch('plantumlEditor/renderUML', res.data, { root: true })
+      })
+  },
+
+  //
+  // Navigation History
+  //
+  
+  backTree (context: any) {
+    context.commit('backHistory')
+  }
+}
+
+const mutations = {
+  /**
+   * Set authentication token
+   */
+  setToken(state: any, token: string) {
+    state.token = token
+  },
+  /**
+   * Set list of repositories user can access.
+   */
+  setRepositories(state: any, repositories: Array<any>) {
+    state.repositories = repositories
+  },
+  /**
+   * Set active repository from GitHub repo object
+   */
+  setRepository(state: any, repo: any) {
+    state.repo = repo
+    state.ownerName = repo.owner.login
+    state.repositoryName = repo.name
+    state.branchName = repo.default_branch
+    
+  },
+  setBranch(state: any, branch: any) {
+    state.branch = branch
+    state.branchName = branch.name
+  },
+  setBranches(state: any, branches: Array<any>) {
+    state.branches = branches
+  },
+  /**
+   * Set currently selected tree
+   */
+  setTree(state: any, tree: any) {
+    state.tree = tree
+  },
+  setContents(state: any, contents: string) {
+    state.contents = contents
+  },
+  settingsAuthenticationErrorMessage (state: any, message: string) {
+    state.settingsAuthenticationErrorMessage = message
+  },
+  pushHistory(state: any) {
+    state.historyStack.push({
+      ownerName: state.ownerName,
+      repo: clone(state.repo),
+      repositoryName: state.repositoryName,
+      branch: clone(state.branch),
+      branchName: state.branchName,
+      branches: clone(state.branches),
+      tree: clone(state.tree)
+    })
+  },
+  backHistory(state: any) {
+    let historyItem: any = state.historyStack.pop()
+    if (historyItem) {
+      state.tree = historyItem.tree
+      state.ownerName = historyItem.ownerName
+      state.repo = historyItem.repo
+      state.repositoryName = historyItem.repositoryName
+      state.branch = historyItem.branch
+      state.branchName = historyItem.branchName
+      state.branche = historyItem.branches
+    } else {
+      state.tree = {}
+      state.ownerName = null
+      state.repo = null
+      state.repositoryName = null
+      state.branch = null
+      state.branchName = null
+      state.branches = null
     }
   }
+}
+
+export default {
+  namespaced: true,
+  state,
+  mutations,
+  actions
 }
