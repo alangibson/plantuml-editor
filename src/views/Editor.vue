@@ -3,16 +3,16 @@
     <headerNavbar :enableConfluence="enableConfluence"></headerNavbar>
     <div class="container-fluid">
       <div class="row">
-        <div :class="[historyCol ? `col-sm-${historyCol}` : 'col-sm-2']" v-show="Boolean(historyCol)">
+        <div id="history-column" :class="[historyCol ? `col-sm-${historyCol}` : 'col-sm-2']" v-show="Boolean(historyCol)">
           <historyList :height="height"></historyList>
         </div>
-        <div class="col-editor" :class="[editorCol ? `col-sm-${editorCol}` : 'col-sm-4']" v-show="Boolean(editorCol)">
+        <div id="editor-column" class="col-editor" :class="[editorCol ? `col-sm-${editorCol}` : 'col-sm-4']" v-show="Boolean(editorCol)">
           <editor :height="height"></editor>
         </div>
-        <div :class="[cheatSheetCol ? `col-sm-${cheatSheetCol}` : 'col-sm-3']" v-show="Boolean(cheatSheetCol)">
+        <div id="cheatsheet-column" :class="[cheatSheetCol ? `col-sm-${cheatSheetCol}` : 'col-sm-3']" v-show="Boolean(cheatSheetCol)">
           <cheatSheet :height="height"></cheatSheet>
         </div>
-        <div :class="[umlCol ? `col-sm-${umlCol}` : 'col-sm-6']" v-show="Boolean(umlCol)">
+        <div id="uml-column" :class="[umlCol ? `col-sm-${umlCol}` : 'col-sm-6']" v-show="Boolean(umlCol)">
           <functionTop></functionTop>
           <uml :height="umlH"></uml>
         </div>
@@ -28,6 +28,12 @@
 
 <script>
 /* @flow */
+
+import $ from 'jquery'
+
+import 'jquery-ui/themes/base/resizable.css'
+import 'jquery-ui/ui/core'
+import 'jquery-ui/ui/widgets/resizable'
 
 // components
 import HeaderNavbar from '../components/HeaderNavbar'
@@ -92,6 +98,20 @@ export default {
   mounted() {
     this.setHeight()
     window.$('[data-toggle="tooltip"]').tooltip()
+
+    $('#editor-column').resizable()
+    var umlColumnWidth = null
+    $('#editor-column').on( "resize", ( event, ui ) => {
+      let delta = ui.size.width - ui.originalSize.width
+      $("#uml-column").width(umlColumnWidth - delta)
+    })
+    $('#editor-column').on( "resizestart", ( event, ui ) => {
+      umlColumnWidth = $("#uml-column").width()
+    })
+    $('#editor-column').on( "resizestop", ( event, ui ) => {
+      // TODO set editor and uml size in vuex store
+      umlColumnWidth = null
+    })
 
     // Look for a query param ?uml={..} or anchor #uml={...}
     // FIXME getting error with #github/
