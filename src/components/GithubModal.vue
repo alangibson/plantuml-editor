@@ -14,7 +14,7 @@
 
                <!-- Left-hand list of repos and and branches -->
                <ul id="repo-branch-list" class="menu-list">
-                 <li v-for="repo in $store.state.github.repositories" :key="repo.id">
+                 <li v-for="repo in repositories" :key="repo.id">
                    <a @click="setRepository(repo)">
                      {{ repo.full_name }}
                    </a>
@@ -95,6 +95,21 @@ export default {
     },
     hasSelection(): boolean {
       return !! this.$store.state.github.ownerName
+    },
+    /**
+     * Return sorted list of repositories.
+     */
+    repositories() {
+      return this.$store.state.github.repositories
+        .slice(0)
+        .sort((a, b) => {
+          if (a.full_name.toLowerCase() < b.full_name.toLowerCase()) {
+            return -1
+          } else {
+            return 1
+          }
+        }
+      )
     }
   },
   methods: {
