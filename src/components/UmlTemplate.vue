@@ -2,9 +2,11 @@
   <ul class="nav navbar-nav">
     <li class="dropdown">
       <a class="dropdown-toggle" data-toggle="dropdown" role="button">
-        <i class="fa fa-pencil-square"></i> template <b class="caret"></b>
+        <i class="fa fa-pencil-square"></i> file <b class="caret"></b>
       </a>
       <ul class="dropdown-menu">
+        <li><a @click="newDocument">New Document</a></li>
+        <li class="divider"></li>
         <li class="dropdown-header">behavioral diagrams</li>
         <li><a @click="selectTemplate('useCase')">Use Case</a></li>
         <li><a @click="selectTemplate('ActivityB')">Activity &#946;</a></li>
@@ -33,8 +35,20 @@ export default {
   methods: {
     selectTemplate(prop: string) {
       if (window.confirm(this.selectMessage)) {
-        this.$store.dispatch('umlTemplate/selectTemplate', prop)
+        this.$store.dispatch('histories/newDocument')
+          .then(() => {
+            this.$store.dispatch('umlTemplate/selectTemplate', prop)
+              .then(() => {
+                this.$store.dispatch('histories/save', this.$store.state.plantumlEditor)
+              })
+          })
       }
+    },
+    newDocument() {
+      this.$store.dispatch('histories/newDocument')
+        .then(() => {
+          this.$store.dispatch('histories/save', this.$store.state.plantumlEditor)
+        })
     }
   }
 }
@@ -44,5 +58,8 @@ export default {
 <style scoped>
 .dropdown-menu > li > a {
   cursor: pointer;
+}
+.navbar-inverse .navbar-nav > li > a {
+  color: #ffffec;
 }
 </style>

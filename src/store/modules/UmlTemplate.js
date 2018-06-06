@@ -1,8 +1,8 @@
 /* @flow */
 
 const actions: any = {
-  selectTemplate(context: any, prop: string) {
-    context.dispatch('plantumlEditor/renderUML', context.state[prop], {
+  selectTemplate(context: any, prop: string): Promise<*> {
+    return context.dispatch('plantumlEditor/renderUML', context.state[prop], {
       root: true
     })
   }

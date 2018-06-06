@@ -102,6 +102,13 @@ export default {
       let encodedUml: string = ref.split('uml=').slice(1).join('uml=')
       this.$store.dispatch('plantumlEditor/renderEncodedUML', encodedUml)
     }
+
+    // If there is no open file, open one or create a new one if history is empty
+    this.$store.dispatch('histories/openFirstOrNewDocument')
+      .then(() => {
+        this.$store.dispatch('plantumlEditor/renderUML', this.$store.state.histories.openDocument.text)
+      })
+
   },
   methods: {
     setHeight() {

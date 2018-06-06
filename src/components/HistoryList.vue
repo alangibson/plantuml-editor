@@ -5,7 +5,8 @@
         When you press the Save button, it will be added to the history.
       </div>
       <div class="thumbnail" v-for="(history, key, index) in histories" :key="index">
-        <img v-lazy="createUrl(history.encodedText)" @click="read(history.text, $event)" height="200" width="100%">
+        <!--<img v-lazy="createUrl(history.encodedText)" @click="read(history.text, $event)" height="200" width="100%">-->
+        <img v-lazy="createUrl(history.encodedText)" @click="read(history.id, $event)" height="200" width="100%">
         <div class="caption">
           <div class="row">
             <div class="col-sm-4">
@@ -42,8 +43,7 @@ export default {
   },
   data(): any {
     return {
-      deleteMessage: 'Can I delete it?',
-      editMessage: 'Do you want to edit it?'
+      deleteMessage: 'Are you sure you want to delete this document?'
     }
   },
   computed: {
@@ -71,10 +71,9 @@ export default {
         this.$store.dispatch('histories/delete', id)
       }
     },
-    read(text: string) {
-      if (window.confirm(this.editMessage)) {
-        this.$store.dispatch('plantumlEditor/renderUML', text)
-      }
+    read(id: string): Promise<*> {
+      // this.$store.dispatch('plantumlEditor/renderUML', text)
+      return this.$store.dispatch('histories/open', id)
     }
   }
 }

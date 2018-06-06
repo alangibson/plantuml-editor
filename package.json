@@ -33,6 +33,7 @@
     "plantuml-encoder": "1.2.4",
     "plantuml-encoder-decoder": "^1.2.5-2",
     "print-js": "1.0.40",
+    "uuid": "^3.2.1",
     "vee-validate": "2.0.0-rc.23",
     "vue": "2.5.16",
     "vue-codemirror": "4.0.1",
