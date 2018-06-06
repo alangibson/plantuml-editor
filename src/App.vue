@@ -29,6 +29,10 @@ export default {
 /* Bootstrap */
 @import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
 
+body {
+  overflow-y: hidden;
+}
+
 .col-editor {
   margin-top: -20px;
   padding: 0;
