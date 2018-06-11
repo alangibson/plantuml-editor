@@ -78,7 +78,7 @@
 </template>
 
 <script>
-import $ from 'jquery'
+// import $ from 'jquery'
 
 export default {
   computed: {
@@ -153,47 +153,6 @@ export default {
     refresh() {
       this.$store.dispatch('github/listRepositories')
       this.$store.dispatch('github/listSelectedRepoBranches')
-    }
-  },
-  mounted() {
-    console.log('mounted')
-    // Split anchor
-    let splitHash: Array<string> = window.location.hash.slice(1).split('/')
-    let path: string = splitHash.slice(4).join('/')
-    // TODO If splitHash.length > 0 and ! this.$store.state.github.token, open options with error message
-    // Authenticate and try to load file
-    if (this.$store.state.github.token) {
-      this.$store.dispatch('github/authenticateToken', this.$store.state.github.token)
-        .then(() => {
-          console.log('Authentication succeeded')
-          // Set up the initial state
-          this.$store.commit('github/settingsAuthenticationErrorMessage', '')
-          this.$store.dispatch('github/listRepositories')
-          // Maybe set repository and editor contents based on url anchor tag
-          // let [owner: string, repository: string, branch: string, ...file: string]: Array<string> = splitHash
-          // let [owner: string, repository: string, treeSHA: string]: Array<string> = splitHash
-          if (splitHash[0] === 'github') {
-            this.$store.dispatch('github/setRepositoryByName', {ownerName: splitHash[1], repositoryName: splitHash[2]})
-              .then(() => {
-                if (splitHash.length === 4) {
-                  // Support splitHash[2] == tree sha
-                  this.$store.dispatch('github/setBlobBySHA', splitHash[3])
-                } else {
-                  // Support splitHash[2] == ref and everything else is file path (like GitHub raw urls)
-                  this.$store.dispatch('github/setContents', {ref: splitHash[3], path: path})
-                }
-              })
-          }
-        })
-        .catch((error: any) => {
-          console.error('authenticateToken failed', error)
-          // Show settings with error message
-          this.$store.commit('github/settingsAuthenticationErrorMessage',
-            `You're trying to open a file from GitHub, but you haven't added any
-            authentication info. Please enter your API token below then refresh
-            this page`)
-          $('#githubSettingsModal').modal('show')
-        })
     }
   }
 }
