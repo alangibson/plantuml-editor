@@ -200,8 +200,16 @@ const actions = {
         context.dispatch('plantumlEditor/renderUML', res.data, { root: true })
       })
   },
+  /**
+   *
+   * @param context
+   * @param ref Name of the commit/branch/tag
+   * @param path Path to file
+   */
   setContents (context: any, {ref, path}: {ref: string, path: string}): any {
-    return context.state.repo.getContents(ref, path, true)
+    return new GitHub({token: context.state.token})
+      .getRepo(context.state.ownerName, context.state.repositoryName)
+      .getContents(ref, path, true)
       .then((res: any) => {
         context.commit('setContents', res.data)
         context.dispatch('plantumlEditor/renderUML', res.data, { root: true })
