@@ -140,8 +140,8 @@ export default {
       } else if (tree.type === 'blob') {
         this.$store.dispatch('github/setBlobBySHA', tree.sha)
         // Set window.location.hash
-        window.location.hash = '#github' +
-                               '/' + this.$store.state.github.ownerName +
+        window.location.hash = '#github=' +
+                               this.$store.state.github.ownerName +
                                '/' + this.$store.state.github.repositoryName +
                                '/' + tree.sha
         // Close modal
