@@ -1,6 +1,6 @@
 {
   "key": "power-plant-uml",
-  "name": "PowerPlant UML",
+  "name": "PowerPlantUML",
   "description": "A powerful Plant UML editor",
   "vendor": {
     "name": "Me",
@@ -27,10 +27,10 @@
         },
         "url": "/confluence/macro?url={url}",
         "description": {
-          "value": "PowerPlant UML Macro"
+          "value": "PowerPlantUML Macro"
         },
         "outputType": "block",
-        "bodyType": "none",
+        "bodyType": "plain-text",
         "featured": true,
         "parameters": [
           {
@@ -51,6 +51,17 @@
             },
             "description": {
               "value": "Encoded PlantUML"
+            },
+            "type": "string",
+            "required": false
+          },
+          {
+            "identifier": "imageType",
+            "name": {
+              "value": "PlantUML image type"
+            },
+            "description": {
+              "value": "PlantUML image type"
             },
             "type": "string",
             "required": true
