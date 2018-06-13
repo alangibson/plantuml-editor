@@ -1,6 +1,6 @@
 <template>
   <div :style="{height: height}">
-    <codemirror :value="text" :options="options" @ready="onReady" @input="onChange"></codemirror>
+    <codemirror :value="text" :options="options" @ready="onReady" @input="onChange" @keyUp="onKeyUp" @keyHandled="onCursorActivity"></codemirror>
   </div>
 </template>
 
@@ -19,6 +19,8 @@ import '../lib/codemirror/mode/plantuml/plantuml.js'
 import 'codemirror/lib/codemirror.css'
 import 'codemirror/theme/solarized.css'
 import 'codemirror/addon/hint/show-hint.css'
+
+var renderTimer
 
 export default {
   components: {
@@ -49,12 +51,48 @@ export default {
     onReady(codemirror: any) {
       this.codemirror = codemirror
       this.addKeymap()
+      // this.addAutoRenderKeyBinding()
       setTimeout(() => {
         this.codemirror.setSize('100%', 'calc(100%)')
       })
     },
     onChange(text: string) {
+      console.log('onChange', text)
       this.$store.dispatch('plantumlEditor/syncText', text)
+        // .then(() => {
+        //   clearTimeout(renderTimer)
+        //   renderTimer = setTimeout(() => {
+        //     this.$store.dispatch(
+        //       'plantumlEditor/renderUML',
+        //       this.$store.state.plantumlEditor.text
+        //     )
+        //   }, 2000)
+        // })
+    },
+    onKeyUp(a: any) {
+      console.log('key up', a)
+    },
+    onCursorActivity(cm: any, keyName: any) {
+      console.log('onCursorActivity', keyName, cm.getValue(), this.$store.state.plantumlEditor.text)
+
+      // this.$store.dispatch('plantumlEditor/syncText', this.codemirror.getValue())
+
+      // this.$store.dispatch('plantumlEditor/syncText', cm.getValue())
+      //   .then(() => {
+      //     if (keyName === 'Up' || keyName === 'Down' || keyName === 'Enter') {
+      //       this.$store.dispatch(
+      //         'plantumlEditor/renderUML',
+      //         this.$store.state.plantumlEditor.text
+      //       )
+      //     }
+      //   })
+
+      // if (keyName === 'Up' || keyName === 'Down' || keyName === 'Enter') {
+      //   this.$store.dispatch(
+      //     'plantumlEditor/renderUML',
+      //     this.$store.state.plantumlEditor.text
+      //   )
+      // }
     },
     snippet() {
       const codemirror: any = this.codemirror
@@ -114,6 +152,19 @@ export default {
         this.insertTab()
       }
       this.codemirror.setOption('extraKeys', map)
+    },
+    addAutoRenderKeyBinding() {
+      this.codemirror.on('keyup', (cm, e) => {
+        if (e.key === 'ArrowUp' || e.key === 'ArrowDown' || e.key === 'Enter') {
+          // Naively re-render
+          // TODO should actually check status code from server
+          // TODO Race condition with onChange?
+          this.$store.dispatch(
+            'plantumlEditor/renderUML',
+            this.$store.state.plantumlEditor.text
+          )
+        }
+      })
     }
   }
 }
