@@ -92,10 +92,12 @@ export default {
       },
       set(value: string) {
         this.$store.dispatch('plantumlEditor/setUmlExtension', value)
-        this.$store.dispatch(
-          'plantumlEditor/renderUML',
-          this.$store.state.plantumlEditor.text
-        )
+          .then(() => {
+            this.$store.dispatch(
+              'plantumlEditor/renderUML',
+              this.$store.state.plantumlEditor.text
+            )
+          })
       }
     }
   },
