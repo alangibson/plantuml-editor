@@ -3,8 +3,15 @@
     <div class="col-sm-12">
       <div id="umlArea" class="dragscroll umlImage" :style="{'height':height}">
         <div v-html="preMarkdown"></div>
-          <img :src="src" @load="loadedImg" v-if="!isSvg" :width="umlWidth"/>
-          <object :data="src" @load="loadedImg" v-if="isSvg" :width="umlWidth"></object>
+
+        <!--
+          Not making a difference between png and svg due to chrome (?) bug
+          that requests svg in infinite loop due to a.style.cssText undefined
+        -->
+        <!--<img :src="src" @load="loadedImg" v-if="!isSvg && hasSrc" :width="umlWidth"/>-->
+        <!--<object :data="src" @load="loadedImg" v-else-if="isSvg && hasSrc" :width="umlWidth"></object>-->
+        <img :src="src" @load="loadedImg" :width="umlWidth"/>
+
         <div v-html="afterMarkdown"></div>
       </div>
     </div>
@@ -28,6 +35,9 @@ export default {
     src(): string {
       return this.$store.state.plantumlEditor.src
     },
+    // hasSrc(): boolean {
+    //   return !!this.$store.state.plantumlEditor.src
+    // },
     isSvg(): string {
       return this.$store.getters['plantumlEditor/isSvg']
     },
