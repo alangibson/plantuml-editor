@@ -5,8 +5,15 @@
         <div v-html="preMarkdown"></div>
         <div class="text-center" align="center">
           <p>
-            <img :src="src" @load="loadedImg" v-if="!isSvg">
-            <object :data="src" :width="umlWidth+'%'" @load="loadedImg" v-if="isSvg"></object>
+
+            <!--
+              Not making a difference between png and svg due to chrome (?) bug
+              that requests svg in infinite loop due to a.style.cssText undefined
+            -->
+            <!--<img :src="src" @load="loadedImg" v-if="!isSvg && hasSrc" :width="umlWidth"/>-->
+            <!--<object :data="src" @load="loadedImg" v-else-if="isSvg && hasSrc" :width="umlWidth"></object>-->
+            <img :src="src" @load="loadedImg" :width="umlWidth"/>
+
           </p>
         </div>
         <div v-html="afterMarkdown"></div>
@@ -30,6 +37,9 @@ export default {
     src(): string {
       return this.$store.state.plantumlEditor.src
     },
+    // hasSrc(): boolean {
+    //   return !!this.$store.state.plantumlEditor.src
+    // },
     isSvg(): string {
       return this.$store.getters['plantumlEditor/isSvg']
     },
