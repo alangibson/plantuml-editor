@@ -46,6 +46,12 @@
                 </select>
               </div>
             </div>
+            <div class="form-group">
+              <label class="col-sm-4 control-label">PlantUML server</label>
+              <div class="col-sm-8">
+                <input name="cdn" v-model="cdn"/>
+              </div>
+            </div>
           </form>
         </div>
         <div class="modal-footer">
@@ -76,6 +82,14 @@ export default {
       },
       set(value: string) {
         this.$store.dispatch('plantumlEditor/syncCodeMirrorIndent', value)
+      }
+    },
+    cdn: {
+      get(): string {
+        return this.$store.state.plantumlEditor.cdn
+      },
+      set(value: string) {
+        this.$store.dispatch('plantumlEditor/setCDN', value)
       }
     },
     codeMirrorTheme: {

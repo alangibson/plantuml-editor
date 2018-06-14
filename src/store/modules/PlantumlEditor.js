@@ -135,6 +135,9 @@ const mutations: any = {
   setText(state: any, text: string) {
     state.text = text
   },
+  setCDN(state: any, cdn: string) {
+    state.cdn = cdn
+  },
   renderUML(state: any, text: string) {
     const uml: string = `${state.startuml}${String(
       text.split(state.startuml)[1]
@@ -212,6 +215,10 @@ const actions: any = {
   },
   setIsLoading(context: any, isLoading: boolean) {
     context.commit('setIsLoading', isLoading)
+  },
+  setCDN(context: any, cdn: string) {
+    context.commit('setCDN', cdn)
+    context.dispatch('renderUML', context.state.text)
   },
   getLocalStrage(context: any) {
     context.commit('getLocalStrage')
