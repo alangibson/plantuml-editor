@@ -6,7 +6,6 @@
 
 <script>
 import Editor from './Editor'
-// import AJS from '@atlassian/aui/lib/js/aui'
 import AP from 'atlassian-connect'
 
 export default {
@@ -15,11 +14,13 @@ export default {
     Editor
   },
   mounted () {
-    let store = this.$store
     // Recover macro editor state
-    AP.confluence.getMacroData(function(macroParams) {
-      store.dispatch('plantumlEditor/renderEncodedUML', macroParams.encodedUML)
-    });
+    AP.confluence.getMacroData((macroParams) => {
+      this.$store.dispatch('confluence/loadParams', macroParams)
+    })
+    AP.confluence.getMacroBody((body) => {
+      this.$store.dispatch('confluence/loadBody', body)
+    })
   }
 }
 </script>
