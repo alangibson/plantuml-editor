@@ -45,4 +45,7 @@ export default {
 .dropdown-menu > li > a {
   cursor: pointer;
 }
+.navbar-inverse .navbar-nav > li > a {
+  color: #ffffec;
+}
 </style>
