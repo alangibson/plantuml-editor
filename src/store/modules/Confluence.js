@@ -16,6 +16,11 @@ const actions: any = {
     AP.confluence.closeMacroEditor()
   },
   loadParams(context: any, macroParams: any) {
+    if (! macroParams) {
+      console.log('macroParams not defined. Nothing to do.');
+      return;
+    }
+    // HACK backwards compatability
     if (macroParams.encodedUML) {
       context.dispatch('plantumlEditor/renderEncodedUML', macroParams.encodedUML, {root: true})
     }
