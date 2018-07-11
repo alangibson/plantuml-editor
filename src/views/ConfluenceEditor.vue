@@ -1,5 +1,5 @@
 <template>
-  <div  style="500px;">
+  <div>
     <editor :enableConfluence="true"></editor>
   </div>
 </template>
@@ -15,10 +15,14 @@ export default {
   },
   mounted () {
     // Recover macro editor state
-    AP.confluence.getMacroData((macroParams) => {
+    AP.confluence.getMacroData((macroParams: any) => {
       this.$store.dispatch('confluence/loadParams', macroParams)
+      // HACK backwards compatability
+      if (macroParams.encodedUML) {
+        this.$store.dispatch('plantumlEditor/renderEncodedUML', macroParams.encodedUML)
+      }
     })
-    AP.confluence.getMacroBody((body) => {
+    AP.confluence.getMacroBody((body: string) => {
       this.$store.dispatch('confluence/loadBody', body)
     })
   }
