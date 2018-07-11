@@ -46,14 +46,14 @@ npm run test
 npm run e2e
 
 # Run with ngrok
-export BASEURL="https:\/\/3f62d445.ngrok.io"
+BASEURL="https:\/\/3f62d445.ngrok.io"
 sed "s/{{localBaseUrl}}/${BASEURL}/g" atlassian-connect.json.tmpl > atlassian-connect.json
 npm run dev
 ./ngrok http --host-header=rewrite 8080 
 
 # Deploy to firebase
 rm -fr dist/
-export BASEURL="https:\/\/powerplantuml.firebaseapp.com"
+BASEURL="https:\/\/powerplantuml.firebaseapp.com"
 sed "s/{{localBaseUrl}}/${BASEURL}/g" atlassian-connect.json.tmpl > atlassian-connect.json
 npm run build
 firebase deploy

@@ -22,10 +22,7 @@ const actions: any = {
     }
     // HACK backwards compatability
     if (macroParams.encodedUML) {
-      console.log('macroParams contains encodedUML', macroParams.encodedUML);
       context.dispatch('plantumlEditor/renderEncodedUML', macroParams.encodedUML, {root: true})
-    } else {
-      console.log('macroParams does not contain encodedUML');
     }
     // Set image type
     if (macroParams.imageType) {
@@ -37,7 +34,7 @@ const actions: any = {
     }
   },
   loadBody(context: any, body: string) {
-    if (body && body !== '') {
+    if (body && body !== '' && body !== '\n') {
       context.dispatch('plantumlEditor/renderUML', body, {root: true})
     }
   }
