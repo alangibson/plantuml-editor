@@ -22,6 +22,10 @@
 ## Build Setup
 
 ``` bash
+
+# Set path
+export PATH=$PWD/node_modules/.bin:$PWD/node-v9.9.0-linux-x64/bin:$PATH
+
 # install dependencies
 npm install
 
@@ -40,6 +44,19 @@ npm run test
 
 # run e2e tests
 npm run e2e
+
+# Run with ngrok
+export BASEURL="https:\/\/3f62d445.ngrok.io"
+sed "s/{{localBaseUrl}}/${BASEURL}/g" atlassian-connect.json.tmpl > atlassian-connect.json
+npm run dev
+./ngrok http --host-header=rewrite 8080 
+
+# Deploy to firebase
+rm -fr dist/
+export BASEURL="https:\/\/powerplantuml.firebaseapp.com"
+sed "s/{{localBaseUrl}}/${BASEURL}/g" atlassian-connect.json.tmpl > atlassian-connect.json
+npm run build
+firebase deploy
 ```
 
 ## Other

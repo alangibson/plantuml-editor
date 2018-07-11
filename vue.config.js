@@ -1,4 +1,5 @@
 var webpack = require('webpack')
+const CopyWebpackPlugin = require('copy-webpack-plugin')
 
 module.exports = {
   configureWebpack: {
@@ -13,7 +14,10 @@ module.exports = {
         $: 'jquery',
         'window.jQuery': 'jquery',
         'window.$': 'jquery'
-      })
+      }),
+      new CopyWebpackPlugin([
+        { from: 'atlassian-connect.json' }
+      ])
     ],
     externals: {
       'atlassian-connect': 'AP'
