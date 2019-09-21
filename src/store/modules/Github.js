@@ -38,7 +38,7 @@ const actions = {
   // Presentation and display
   //
   
-  showGithubModal (context) {
+  showGithubModal (context: any) {
     // If no token, show settings instead
     if (! context.state.token) {
       $('#githubSettingsModal').modal('show')
@@ -47,7 +47,7 @@ const actions = {
     // HACK
     $('#selectGithubRepoModal').modal('show')
   },
-  showGithubSettingsModal (context) {
+  showGithubSettingsModal (context: any) {
     // HACK
     $('#githubSettingsModal').modal('show')
   },

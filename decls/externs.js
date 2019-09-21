@@ -86,7 +86,15 @@ declare module 'print-js' {
   declare module.exports: any;
 }
 
+declare module 'vee-validate' {
+  declare module.exports: any;
+}
+
 declare module 'vue' {
+  declare module.exports: any;
+}
+
+declare module 'vuex' {
   declare module.exports: any;
 }
 
@@ -95,5 +103,37 @@ declare module 'vue-codemirror' {
 }
 
 declare module 'vue-lazyload' {
+  declare module.exports: any;
+}
+
+declare module 'vue-router' {
+  declare module.exports: any;
+}
+
+declare module 'lodash' {
+  declare module.exports: any;
+}
+
+declare module 'axios' {
+  declare module.exports: any;
+}
+
+declare module 'github-api' {
+  declare module.exports: any;
+}
+
+declare module 'vuex-persistedstate' {
+  declare module.exports: any;
+}
+
+declare module 'plantuml-encoder-decoder' {
+  declare module.exports: any;
+}
+
+declare module 'marked' {
+  declare module.exports: any;
+}
+
+declare module 'dexie' {
   declare module.exports: any;
 }
