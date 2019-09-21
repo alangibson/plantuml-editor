@@ -36,3 +36,4 @@ node*
 ngrok
 firebase-debug.log
 atlassian-connect.json
+.firebase/

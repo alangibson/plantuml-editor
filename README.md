@@ -21,10 +21,29 @@
 
 ## Build Setup
 
+### Set environment
+
+```bash
+# local dev env
+export BASEURL='https://3f62d445.ngrok.io'
+export FUNCTION_BASEURL='https://3f62d445.ngrok.io'
+# test env
+npm run firebase use test
+export BASEURL='https://powerplantuml-test.firebaseapp.com'
+export FUNCTION_BASEURL='https://us-central1-powerplantuml-test.cloudfunctions.net'
+# prod env
+npm run firebase use default
+export BASEURL='https://powerplantuml.firebaseapp.com'
+export FUNCTION_BASEURL='https://us-central1-powerplantuml.cloudfunctions.net'
+
+```
+
+## Build, deploy, etc
+
 ``` bash
 
 # Set path
-export PATH=$PWD/node_modules/.bin:$PWD/node-v9.9.0-linux-x64/bin:$PATH
+# export PATH=$PWD/node_modules/.bin:$PWD/node-v9.9.0-linux-x64/bin:$PATH
 
 # install dependencies
 npm install
@@ -46,17 +65,15 @@ npm run test
 npm run e2e
 
 # Run with ngrok
-BASEURL="https:\/\/3f62d445.ngrok.io"
-sed "s/{{localBaseUrl}}/${BASEURL}/g" atlassian-connect.json.tmpl > atlassian-connect.json
+cat atlassian-connect.tmpl.json | envsubst > atlassian-connect.json
 npm run dev
 ./ngrok http --host-header=rewrite 8080 
 
 # Deploy to firebase
 rm -fr dist/
-BASEURL="https:\/\/powerplantuml.firebaseapp.com"
-sed "s/{{localBaseUrl}}/${BASEURL}/g" atlassian-connect.json.tmpl > atlassian-connect.json
+cat atlassian-connect.tmpl.json | envsubst > atlassian-connect.json
 npm run build
-firebase deploy
+npm run firebase deploy
 ```
 
 ## Other

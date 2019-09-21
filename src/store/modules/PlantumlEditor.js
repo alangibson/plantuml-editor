@@ -12,6 +12,7 @@ const state: any = {
   url: 'https://plantuml-editor.kkeisuke.com/',
   official: 'http://plantuml.com/',
   plantuml: 'plantuml',
+  language: 'plantuml', // plantuml or mermaid
   server: 'https://plantuml-server.herokuapp.com/',
   cdn: 'https://plantuml-server.kkeisuke.app/',
   startuml: '@startuml',
@@ -145,6 +146,12 @@ const mutations: any = {
     state.encodedText = plantumlEncoder.encode(uml)
     state.src = `${state.cdn}${state.umlExtension}/${state.encodedText}.${state.umlExtension}`
   },
+  resetUML(state: any) {
+    const uml = `${state.startuml}${state.enduml}`
+    state.text = uml
+    state.encodedText = plantumlEncoder.encode(uml)
+    state.src = `${state.cdn}${state.umlExtension}/${state.encodedText}.${state.umlExtension}`
+  },
   renderMarkdown(state: any, text: string) {
     const pre: string = text.split(state.startuml)[0] || ''
     const after: string = text.split(state.enduml)[1] || ''
@@ -192,6 +199,9 @@ const mutations: any = {
   },
   setShowHotkeyTips (state: any, show: boolean) {
     state.showHotkeyTips = show
+  },
+  setLanguage(state: any, language: string) {
+    state.language = language
   }
 }
 
@@ -247,6 +257,9 @@ const actions: any = {
   renderEncodedUML(context: any, encodedUML: string) {
     let text = plantumlEncoder.decode(encodedUML)
     context.dispatch('renderUML', text)
+  },
+  setLanguage (context: any, language: string) {
+    context.commit('setLanguage', language)
   },
   download({ state }: any) {
     const ext: any = _.find(state.umlExtensions, { text: state.umlExtension })

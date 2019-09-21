@@ -3,13 +3,13 @@
   "name": "PowerPlantUML",
   "description": "A powerful Plant UML editor",
   "vendor": {
-    "name": "Me",
+    "name": "Alan Gibson",
     "url": "https://powerplantuml.firebaseapp.com"
   },
-  "baseUrl": "{{localBaseUrl}}",
+  "baseUrl": "$BASEURL",
   "links": {
-    "self": "{{localBaseUrl}}/atlassian-connect.json",
-    "homepage": "{{localBaseUrl}}/atlassian-connect.json"
+    "self": "${BASEURL}/atlassian-connect.json",
+    "homepage": "${BASEURL}/atlassian-connect.json"
   },
   "authentication": {
     "type": "none"
@@ -19,19 +19,25 @@
     "write"
   ],
   "modules": {
-    "dynamicContentMacros": [
+    "staticContentMacros": [
       {
         "key": "power-plant-uml-macro",
         "name": {
           "value": "PowerPlantUML"
         },
-        "url": "/confluence/macro?url={url}",
+        "url": "/confluence/static-macro?url={url}&encodedUML={encodedUML}&imageType={imageType}&language={language}",
         "description": {
-          "value": "PowerPlantUML Macro"
+          "value": "PowerPlantUML Static Macro"
         },
+        "icon": {
+					"width": 128,
+					"height": 128,
+					"url": "/logo.png"
+				},
         "outputType": "block",
-        "bodyType": "plain-text",
         "featured": true,
+        "width": "100%",
+        "bodyType": "none",
         "parameters": [
           {
             "identifier": "url",
@@ -40,6 +46,17 @@
             },
             "description": {
               "value": "PlantUML URL."
+            },
+            "type": "string",
+            "required": false
+          },
+          {
+            "identifier": "doc",
+            "name": {
+              "value": "PlantUML document"
+            },
+            "description": {
+              "value": "PlantUML document"
             },
             "type": "string",
             "required": true
@@ -53,7 +70,7 @@
               "value": "Encoded PlantUML"
             },
             "type": "string",
-            "required": false
+            "required": true
           },
           {
             "identifier": "imageType",
@@ -65,6 +82,17 @@
             },
             "type": "string",
             "required": true
+          },
+          {
+            "identifier": "language",
+            "name": {
+              "value": "Language type"
+            },
+            "description": {
+              "value": "Language type"
+            },
+            "type": "string",
+            "required": false
           }
         ],
         "editor": {
@@ -75,8 +103,13 @@
           "insertTitle": {
             "value": "Insert PowerPlant UML"
           },
+          "cacheable": false,
           "width": "100%",
           "height": "100%"
+        },
+        "imagePlaceholder": {
+          "url": "/confluence/image-placeholder",
+          "applyChrome": true
         }
       }
     ],
