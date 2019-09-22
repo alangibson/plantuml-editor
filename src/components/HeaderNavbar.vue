@@ -112,10 +112,8 @@ export default {
     UmlTemplate,
     Github
   },
-  props: [
-    'enableConfluence'
-  ],
-  data () {
+  props: ['enableConfluence'],
+  data() {
     return {}
   },
   computed: {
@@ -153,10 +151,10 @@ export default {
     /*
      * Github support
      */
-    selectGithubRepo () {
+    selectGithubRepo() {
       this.$store.dispatch('github/showGithubModal')
     },
-    selectGithubSettings () {
+    selectGithubSettings() {
       this.$store.dispatch('github/showGithubSettingsModal')
     },
     showGistModal() {
@@ -165,10 +163,10 @@ export default {
     /*
      * Confluence support
      */
-    cancelConfluence () {
+    cancelConfluence() {
       this.$store.dispatch('confluence/cancel')
     },
-    saveConfluence () {
+    saveConfluence() {
       this.$store.dispatch('confluence/save')
     }
   }

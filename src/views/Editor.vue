@@ -59,9 +59,7 @@ export default {
     Uml,
     Editor
   },
-  props: [
-    'enableConfluence'
-  ],
+  props: ['enableConfluence'],
   computed: {
     historyCol(): number {
       return this.$store.state.layout.colSize.history
@@ -102,46 +100,64 @@ export default {
     //
     // Look for a query param ?uml={..} or anchor #uml={...}
     if (this.$route.query.uml) {
-
-      this.$store.dispatch('plantumlEditor/renderEncodedUML', this.$route.query.uml)
-
+      this.$store.dispatch(
+        'plantumlEditor/renderEncodedUML',
+        this.$route.query.uml
+      )
     } else if (this.$route.hash) {
       let anchor: string = this.$route.hash.split('#')[1]
 
       if (anchor.startsWith('uml')) {
-
-        let encodedUml: string = anchor.split('uml=').slice(1).join('uml=')
+        let encodedUml: string = anchor
+          .split('uml=')
+          .slice(1)
+          .join('uml=')
         this.$store.dispatch('plantumlEditor/renderEncodedUML', encodedUml)
-
       } else if (anchor.startsWith('github')) {
-
         // Parse anchor
         let splitHash: Array<string> = anchor
           // Safely remove the first 'github='
-          .split('github=').slice(1).join('github=')
+          .split('github=')
+          .slice(1)
+          .join('github=')
           // Split on path separator
           .split('/')
-        let [ownerName: string, repositoryName: string, shaOrRef: string, ...fileParts: string]: Array<*> = splitHash
+        let [
+          ownerName: string,
+          repositoryName: string,
+          shaOrRef: string,
+          ...fileParts: string
+        ]: Array<*> = splitHash
         let path: string = fileParts.join('/')
 
         // Open file by path or sha
-        this.$store.dispatch('github/setRepositoryByName', {ownerName: ownerName, repositoryName: repositoryName})
+        this.$store
+          .dispatch('github/setRepositoryByName', {
+            ownerName: ownerName,
+            repositoryName: repositoryName
+          })
           .then(() => {
             if (splitHash.length === 3) {
               // Support splitHash[2] == tree sha
-              this.$store.dispatch('github/setBlobBySHA', shaOrRef)
-                .then(() => {
-                  // Add file to history
-                  // TODO github path should be file id in plantumlEditor
-                  this.$store.dispatch('histories/save', this.$store.state.plantumlEditor)
-                })
+              this.$store.dispatch('github/setBlobBySHA', shaOrRef).then(() => {
+                // Add file to history
+                // TODO github path should be file id in plantumlEditor
+                this.$store.dispatch(
+                  'histories/save',
+                  this.$store.state.plantumlEditor
+                )
+              })
             } else {
               // Support splitHash[2] == ref and everything else is file path (like GitHub raw urls)
-              this.$store.dispatch('github/setContents', {ref: shaOrRef, path: path})
+              this.$store
+                .dispatch('github/setContents', { ref: shaOrRef, path: path })
                 .then(() => {
                   // Add file to history
                   // TODO github path should be file id in plantumlEditor
-                  this.$store.dispatch('histories/save', this.$store.state.plantumlEditor)
+                  this.$store.dispatch(
+                    'histories/save',
+                    this.$store.state.plantumlEditor
+                  )
                 })
             }
           })
@@ -150,18 +166,22 @@ export default {
             let httpStatus = error.response.request.status
             if (httpStatus === 401) {
               // 401 = Unauthorized. Check token.
-              this.$store.commit('github/settingsAuthenticationErrorMessage',
+              this.$store.commit(
+                'github/settingsAuthenticationErrorMessage',
                 `Failed to open file from GitHub.
                 Please make sure your authentication token is valid.
-                Server said "${error.response.request.statusText}."`)
+                Server said "${error.response.request.statusText}."`
+              )
               $('#githubSettingsModal').modal('show')
             } else {
               // 404 = file not found
               // 422 = Unprocessable Entity when path is very wrong?
-              this.$store.commit('github/settingsAuthenticationErrorMessage',
+              this.$store.commit(
+                'github/settingsAuthenticationErrorMessage',
                 `Failed to open file from GitHub.
                 Please check the path and try again.
-                Server said "${error.response.request.statusText}."`)
+                Server said "${error.response.request.statusText}."`
+              )
               $('#githubSettingsModal').modal('show')
             }
           })
@@ -192,5 +212,4 @@ export default {
     }
   }
 }
-
 </script>

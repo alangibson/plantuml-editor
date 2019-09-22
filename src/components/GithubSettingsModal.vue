@@ -39,14 +39,14 @@ export default {
   name: 'GithubSettingsModal',
   computed: {
     githubApiKey: {
-      get (): string {
+      get(): string {
         return this.$store.state.github.token
       },
-      set (value: string) {
+      set(value: string) {
         this.$store.dispatch('github/authenticateToken', value)
       }
     },
-    settingsAuthenticationErrorMessage (): string {
+    settingsAuthenticationErrorMessage(): string {
       return this.$store.state.github.settingsAuthenticationErrorMessage
     }
   }

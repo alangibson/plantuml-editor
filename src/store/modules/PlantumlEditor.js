@@ -144,13 +144,17 @@ const mutations: any = {
       text.split(state.startuml)[1]
     ).split(state.enduml)[0] || ''}${state.enduml}`
     state.encodedText = plantumlEncoder.encode(uml)
-    state.src = `${state.cdn}${state.umlExtension}/${state.encodedText}.${state.umlExtension}`
+    state.src = `${state.cdn}${state.umlExtension}/${state.encodedText}.${
+      state.umlExtension
+    }`
   },
   resetUML(state: any) {
     const uml = `${state.startuml}${state.enduml}`
     state.text = uml
     state.encodedText = plantumlEncoder.encode(uml)
-    state.src = `${state.cdn}${state.umlExtension}/${state.encodedText}.${state.umlExtension}`
+    state.src = `${state.cdn}${state.umlExtension}/${state.encodedText}.${
+      state.umlExtension
+    }`
   },
   renderMarkdown(state: any, text: string) {
     const pre: string = text.split(state.startuml)[0] || ''
@@ -194,10 +198,10 @@ const mutations: any = {
   setIsLoading(state: any, isLoading: boolean) {
     state.isLoading = isLoading
   },
-  setShowHTTPSWarning (state: any, show: boolean) {
+  setShowHTTPSWarning(state: any, show: boolean) {
     state.showHTTPSWarning = show
   },
-  setShowHotkeyTips (state: any, show: boolean) {
+  setShowHotkeyTips(state: any, show: boolean) {
     state.showHotkeyTips = show
   },
   setLanguage(state: any, language: string) {
@@ -258,7 +262,7 @@ const actions: any = {
     let text = plantumlEncoder.decode(encodedUML)
     context.dispatch('renderUML', text)
   },
-  setLanguage (context: any, language: string) {
+  setLanguage(context: any, language: string) {
     context.commit('setLanguage', language)
   },
   download({ state }: any) {

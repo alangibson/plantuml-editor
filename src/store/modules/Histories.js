@@ -17,7 +17,8 @@ const mutations: any = {
   defineScheme(state: any) {
     // バージョン 2
     // Version 2
-    db.version(state.versions[1])
+    db
+      .version(state.versions[1])
       .stores({
         plantuml: state.schemes[1]
       })
@@ -28,10 +29,9 @@ const mutations: any = {
       })
     // バージョン 1
     // Version 1
-    db.version(state.versions[0])
-      .stores({
-        plantuml: state.schemes[0]
-      })
+    db.version(state.versions[0]).stores({
+      plantuml: state.schemes[0]
+    })
   },
   getHistories(state: any) {
     db.plantuml

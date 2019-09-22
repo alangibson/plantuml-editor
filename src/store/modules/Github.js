@@ -2,7 +2,7 @@
 
 import GitHub from 'github-api'
 
-function clone (o: any): any {
+function clone(o: any): any {
   return JSON.parse(JSON.stringify(o))
 }
 
@@ -16,7 +16,7 @@ const state = {
   // Currently selected repository branch
   branchName: null,
   // History of navigation
-  historyStack:  [],
+  historyStack: [],
   // Github repo object of currently selected repo
   repo: null,
   // List of repos user can access from last call to listRepositories
@@ -37,32 +37,32 @@ const actions = {
   //
   // Presentation and display
   //
-  
-  showGithubModal (context: any) {
+
+  showGithubModal(context: any) {
     // If no token, show settings instead
-    if (! context.state.token) {
+    if (!context.state.token) {
       $('#githubSettingsModal').modal('show')
       return
     }
     // HACK
     $('#selectGithubRepoModal').modal('show')
   },
-  showGithubSettingsModal (context: any) {
+  showGithubSettingsModal(context: any) {
     // HACK
     $('#githubSettingsModal').modal('show')
   },
-  
+
   //
   // Authentication
   //
-  
+
   /**
    * Set GitHub authentication token and load up repositories user can access
    */
-  authenticateToken (context: any, token: string): Promise<*> {
+  authenticateToken(context: any, token: string): Promise<*> {
     context.commit('setToken', token)
     // See if token is valid
-    return new GitHub({token: token})
+    return new GitHub({ token: token })
       .getUser()
       .getProfile()
       .then((res: any): any => {
@@ -73,8 +73,10 @@ const actions = {
       })
       .catch((error: any) => {
         console.error(error)
-        context.commit('settingsAuthenticationErrorMessage',
-          'Failed to authenticate you with GitHub. Please check your token.')
+        context.commit(
+          'settingsAuthenticationErrorMessage',
+          'Failed to authenticate you with GitHub. Please check your token.'
+        )
         throw error
       })
   },
@@ -88,12 +90,12 @@ const actions = {
   //
   // Repositories
   //
-  
+
   /**
    * Load up repositories user can access
    */
-  listRepositories (context: any): Promise<*> {
-    return new GitHub({token: context.state.token})
+  listRepositories(context: any): Promise<*> {
+    return new GitHub({ token: context.state.token })
       .getUser()
       .listRepos()
       .then((res: any) => {
@@ -103,15 +105,18 @@ const actions = {
   /**
    * Set active repository from GitHub repo object. Also sets the default branch.
    */
-  setRepository (context: any, repo: any) {
+  setRepository(context: any, repo: any) {
     context.commit('setRepository', repo)
   },
   /**
    * Set repo by owner name and repository name.
    * Useful for jumping to a repo based on URL anchor.
    */
-  setRepositoryByName (context: any, { ownerName, repositoryName }: { ownerName: string, repositoryName: string }): Promise<*> {
-    return new GitHub({token: context.state.token})
+  setRepositoryByName(
+    context: any,
+    { ownerName, repositoryName }: { ownerName: string, repositoryName: string }
+  ): Promise<*> {
+    return new GitHub({ token: context.state.token })
       .getRepo(ownerName, repositoryName)
       .getDetails()
       .then((res: any): any => {
@@ -119,30 +124,30 @@ const actions = {
         return res
       })
   },
-  
+
   //
   // Branches
   //
-  
+
   /**
    * List all branches in currently selected repo.
    */
-  listSelectedRepoBranches (context: any): Promise<*> {
-    return new GitHub({token: context.state.token})
+  listSelectedRepoBranches(context: any): Promise<*> {
+    return new GitHub({ token: context.state.token })
       .getRepo(context.state.ownerName, context.state.repositoryName)
       .listBranches()
       .then((res: any) => {
         context.commit('setBranches', res.data)
       })
   },
-  setBranch (context: any, branch: any) {
+  setBranch(context: any, branch: any) {
     context.commit('setBranch', branch)
   },
   /**
    * Set selected branch in selected repo by branch name.
    */
-  setBranchByName (context: any, branchName: string): Promise<*> {
-    return new GitHub({token: context.state.token})
+  setBranchByName(context: any, branchName: string): Promise<*> {
+    return new GitHub({ token: context.state.token })
       .getRepo(context.state.ownerName, context.state.repositoryName)
       .getBranch(branchName)
       .then((res: any): any => {
@@ -150,14 +155,14 @@ const actions = {
         return res
       })
   },
-  clearBranches (context: any) {
+  clearBranches(context: any) {
     context.commit('setBranches', [])
   },
-  
+
   //
   // Trees
   //
-  
+
   setTree(context: any, tree: any) {
     context.commit('setTree', tree)
   },
@@ -165,7 +170,7 @@ const actions = {
    * Get tree of selected branch head.
    */
   getHeadTreeOfSelectedBranch(context: any): Promise<*> {
-    return new GitHub({token: context.state.token})
+    return new GitHub({ token: context.state.token })
       .getRepo(context.state.ownerName, context.state.repositoryName)
       .getTree(context.state.branchName)
       .then((res: any) => {
@@ -175,8 +180,8 @@ const actions = {
         context.dispatch('setTree', tree)
       })
   },
-  setTreeBySHA (context: any, sha: string): Promise<*> {
-    return new GitHub({token: context.state.token})
+  setTreeBySHA(context: any, sha: string): Promise<*> {
+    return new GitHub({ token: context.state.token })
       .getRepo(context.state.ownerName, context.state.repositoryName)
       .getTree(sha)
       .then((res: any) => {
@@ -191,8 +196,8 @@ const actions = {
   // Blobs
   //
 
-  setBlobBySHA (context: any, sha: string): any {
-    return new GitHub({token: context.state.token})
+  setBlobBySHA(context: any, sha: string): any {
+    return new GitHub({ token: context.state.token })
       .getRepo(context.state.ownerName, context.state.repositoryName)
       .getBlob(sha)
       .then((res: any) => {
@@ -206,8 +211,8 @@ const actions = {
    * @param ref Name of the commit/branch/tag
    * @param path Path to file
    */
-  setContents (context: any, {ref, path}: {ref: string, path: string}): any {
-    return new GitHub({token: context.state.token})
+  setContents(context: any, { ref, path }: { ref: string, path: string }): any {
+    return new GitHub({ token: context.state.token })
       .getRepo(context.state.ownerName, context.state.repositoryName)
       .getContents(ref, path, true)
       .then((res: any) => {
@@ -219,8 +224,8 @@ const actions = {
   //
   // Navigation History
   //
-  
-  backTree (context: any) {
+
+  backTree(context: any) {
     context.commit('backHistory')
   }
 }
@@ -246,7 +251,6 @@ const mutations = {
     state.ownerName = repo.owner.login
     state.repositoryName = repo.name
     state.branchName = repo.default_branch
-    
   },
   setBranch(state: any, branch: any) {
     state.branch = branch
@@ -264,7 +268,7 @@ const mutations = {
   setContents(state: any, contents: string) {
     state.contents = contents
   },
-  settingsAuthenticationErrorMessage (state: any, message: string) {
+  settingsAuthenticationErrorMessage(state: any, message: string) {
     state.settingsAuthenticationErrorMessage = message
   },
   pushHistory(state: any) {

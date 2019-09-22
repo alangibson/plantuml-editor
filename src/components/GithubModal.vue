@@ -83,56 +83,49 @@
 export default {
   computed: {
     treesInSelectedBranch(): Array<any> {
-      return this.$store.state.github.tree.tree
-        .concat()
-        .sort((a, b) => {
-          if (a.type === 'tree') {
-            return -1
-          } else {
-            return 1
-          }
-        })
+      return this.$store.state.github.tree.tree.concat().sort((a, b) => {
+        if (a.type === 'tree') {
+          return -1
+        } else {
+          return 1
+        }
+      })
     },
     hasSelection(): boolean {
-      return !! this.$store.state.github.ownerName
+      return !!this.$store.state.github.ownerName
     },
     /**
      * Return sorted list of repositories.
      */
     repositories() {
-      return this.$store.state.github.repositories
-        .slice(0)
-        .sort((a, b) => {
-          if (a.full_name.toLowerCase() < b.full_name.toLowerCase()) {
-            return -1
-          } else {
-            return 1
-          }
+      return this.$store.state.github.repositories.slice(0).sort((a, b) => {
+        if (a.full_name.toLowerCase() < b.full_name.toLowerCase()) {
+          return -1
+        } else {
+          return 1
         }
-      )
+      })
     }
   },
   methods: {
     setRepository(repo: any) {
       this.$store.commit('github/pushHistory')
-      this.$store.dispatch('github/setRepository', repo)
-        .then(() => {
-          this.$store.dispatch('github/clearBranches')
+      this.$store.dispatch('github/setRepository', repo).then(() => {
+        this.$store.dispatch('github/clearBranches').then(() => {
+          this.$store.dispatch('github/listSelectedRepoBranches')
+          this.$store
+            .dispatch('github/setBranchByName', repo.default_branch)
             .then(() => {
-              this.$store.dispatch('github/listSelectedRepoBranches')
-              this.$store.dispatch('github/setBranchByName', repo.default_branch)
-                .then(() => {
-                  this.$store.dispatch('github/getHeadTreeOfSelectedBranch')
-                })
+              this.$store.dispatch('github/getHeadTreeOfSelectedBranch')
             })
         })
+      })
     },
     setBranch(branch: any) {
       this.$store.commit('github/pushHistory')
-      this.$store.dispatch('github/setBranch', branch)
-        .then(() => {
-          this.$store.dispatch('github/getHeadTreeOfSelectedBranch')
-        })
+      this.$store.dispatch('github/setBranch', branch).then(() => {
+        this.$store.dispatch('github/getHeadTreeOfSelectedBranch')
+      })
     },
     openTree(tree: any) {
       if (tree.type === 'tree') {
@@ -140,10 +133,13 @@ export default {
       } else if (tree.type === 'blob') {
         this.$store.dispatch('github/setBlobBySHA', tree.sha)
         // Set window.location.hash
-        window.location.hash = '#github=' +
-                               this.$store.state.github.ownerName +
-                               '/' + this.$store.state.github.repositoryName +
-                               '/' + tree.sha
+        window.location.hash =
+          '#github=' +
+          this.$store.state.github.ownerName +
+          '/' +
+          this.$store.state.github.repositoryName +
+          '/' +
+          tree.sha
         // Close modal
         // Doesnt work: this.showModal = false
         $('#selectGithubRepoModal').modal('hide')
@@ -165,6 +161,6 @@ export default {
 }
 
 .menu-list a {
- cursor: pointer;
+  cursor: pointer;
 }
 </style>

@@ -31,10 +31,13 @@ export default {
     Parameters
   },
   computed: {
-    showHTTPSWarning (): boolean {
-      return (!this.$store.state.plantumlEditor.isHTTPS && this.$store.state.plantumlEditor.showHTTPSWarning)
+    showHTTPSWarning(): boolean {
+      return (
+        !this.$store.state.plantumlEditor.isHTTPS &&
+        this.$store.state.plantumlEditor.showHTTPSWarning
+      )
     },
-    showHotkeyTips (): boolean {
+    showHotkeyTips(): boolean {
       return this.$store.state.plantumlEditor.showHotkeyTips
     },
     url(): string {
@@ -50,10 +53,10 @@ export default {
     }
   },
   methods: {
-    hideHTTPSWarning () {
+    hideHTTPSWarning() {
       this.$store.commit('plantumlEditor/setShowHTTPSWarning', false)
     },
-    hideHotkeyTips () {
+    hideHotkeyTips() {
       this.$store.commit('plantumlEditor/setShowHotkeyTips', false)
     }
   }

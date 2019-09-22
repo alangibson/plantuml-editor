@@ -47,8 +47,11 @@ export default {
     afterMarkdown(): string {
       return this.$store.state.plantumlEditor.afterMarkdown
     },
-    umlWidth (): string {
-      if (this.$store.state.plantumlEditor.umlWidth && this.$store.state.plantumlEditor.umlWidth >= 1) {
+    umlWidth(): string {
+      if (
+        this.$store.state.plantumlEditor.umlWidth &&
+        this.$store.state.plantumlEditor.umlWidth >= 1
+      ) {
         return this.$store.state.plantumlEditor.umlWidth + '%'
       } else {
         return 'auto'

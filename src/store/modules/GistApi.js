@@ -103,7 +103,10 @@ const actions: any = {
         if (Object.keys(state.gist.files).length >= 2) {
           // Gist 投稿
           axios
-            .post(`${state.api}?access_token=${rootState.github.token}`, state.gist)
+            .post(
+              `${state.api}?access_token=${rootState.github.token}`,
+              state.gist
+            )
             .then((response: any) => {
               commit('setGistURL', response.data.html_url)
               commit('stopSending')

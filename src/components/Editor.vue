@@ -108,18 +108,17 @@ export default {
       })
     },
     onChange(text: string) {
-      this.$store.dispatch('plantumlEditor/syncText', text)
-        .then(() => {
-          // Render, using timer to debounce
-          // Clear old timer and start a new one
-          clearTimeout(renderTimer)
-          renderTimer = setTimeout(() => {
-            this.$store.dispatch(
-              'plantumlEditor/renderUML',
-              this.$store.state.plantumlEditor.text
-            )
-          }, 2000)
-        })
+      this.$store.dispatch('plantumlEditor/syncText', text).then(() => {
+        // Render, using timer to debounce
+        // Clear old timer and start a new one
+        clearTimeout(renderTimer)
+        renderTimer = setTimeout(() => {
+          this.$store.dispatch(
+            'plantumlEditor/renderUML',
+            this.$store.state.plantumlEditor.text
+          )
+        }, 2000)
+      })
     },
     snippet() {
       const codemirror: any = this.codemirror
