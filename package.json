@@ -8,7 +8,7 @@
     "serve": "vue-cli-service serve --open",
     "dev": "vue-cli-service serve",
     "build": "vue-cli-service build && cat atlassian-connect.tmpl.json | envsubst > atlassian-connect.json && cp atlassian-connect.json dist/",
-    "test": "vue-cli-service test",
+    "test": "vue-cli-service test:unit",
     "e2e": "vue-cli-service e2e",
     "lint": "vue-cli-service lint",
     "e2e:open": "vue-cli-service e2e:open",
