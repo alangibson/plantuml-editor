@@ -1,6 +1,7 @@
 {
   "key": "power-plant-uml",
   "name": "PowerPlantUML",
+  "version": "1.1.0",
   "description": "A powerful Plant UML editor",
   "vendor": {
     "name": "Alan Gibson",
@@ -110,6 +111,11 @@
         "imagePlaceholder": {
           "url": "/confluence/image-placeholder",
           "applyChrome": true
+        },
+        "renderModes": {
+          "default": {
+            "url": "/confluence/static-macro?url={url}&encodedUML={encodedUML}&imageType={imageType}&language={language}"
+          }
         }
       }
     ],

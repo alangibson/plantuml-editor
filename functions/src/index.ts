@@ -26,13 +26,16 @@ export const confluenceStaticMacro = functions.https.onRequest((request, respons
     const imageType = request.query['imageType']; // Required
     const escapedUrl = request.query['url']; // Required
     const encodedUML = request.query['encodedUML']; // Optional
-    const contentLanguage = request.query['language']; // Optional. Usually 'plantuml'
     const encoded = extractEncodedUML(escapedUrl, encodedUML);
+    let contentLanguage = request.query['language']; // Optional. Usually 'plantuml'
+    if (! contentLanguage) {
+        contentLanguage = 'plantuml';
+    }
 
-    // response.send(`<ac:image><ri:url ri:value="/confluence/image-placeholder?encodedUML=${encodedUML}&imageType=${imageType}&language=${contentLanguage}" /></ac:image>`);
     // TODO dont hard code plantuml server. refer to confluenceImagePlaceholder instead
     response.send(`<ac:image><ri:url ri:value="http://142.93.20.106/${imageType}/${encoded}" /></ac:image>`);
-
+    // response.send(`<ac:image><ri:url ri:value="/confluence/image-placeholder?imageType=${imageType}&encodedUML=${encoded}&language=${contentLanguage}" /></ac:image>`);
+    
 });
 
 /**
