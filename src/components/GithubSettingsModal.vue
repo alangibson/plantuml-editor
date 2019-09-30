@@ -8,14 +8,14 @@
         </div>
         <div class="modal-body">
           <div v-if="settingsAuthenticationErrorMessage" class="alert alert-danger" role="alert">
-            {{settingsAuthenticationErrorMessage}}
+            {{ settingsAuthenticationErrorMessage }}
           </div>
           <form class="form-horizontal">
             <div class="form-group">
               <label class="col-sm-4 control-label">GitHub API Token</label>
               <div class="col-sm-8">
                 <label>
-                  <input name="githubApiKey" v-model="githubApiKey">
+                  <input name="githubApiKey" v-model="githubApiKey" />
                 </label>
                 <span class="help-block">
                   <a href="https://help.github.com/articles/creating-a-personal-access-token-for-the-command-line/" target="_blank">Creating a personal access token</a>
@@ -54,5 +54,4 @@ export default {
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
-</style>
+<style scoped></style>

@@ -2,12 +2,11 @@
   <div class="row functionTop">
     <div class="col-sm-12">
       <div class="alert alert-warning" v-if="showHTTPSWarning">
-        Your connection is not secure.
-        Please go to <a :href="url">{{url}}</a>
+        Your connection is not secure. Please go to <a :href="url">{{ url }}</a>
         <button type="button" class="close pull-right" @click="hideHTTPSWarning">&times;</button>
       </div>
       <div class="alert alert-default" v-if="showHotkeyTips">
-        Preview is <kbd>{{winKey}}</kbd> or <kbd>{{macKey}}</kbd> . Snippets are <kbd>{{snippetWinKey}}</kbd> or <kbd>{{snippetMacKey}}</kbd> .
+        Preview is <kbd>{{ winKey }}</kbd> or <kbd>{{ macKey }}</kbd> . Snippets are <kbd>{{ snippetWinKey }}</kbd> or <kbd>{{ snippetMacKey }}</kbd> .
         <button type="button" class="close pull-right" @click="hideHotkeyTips">&times;</button>
       </div>
       <div class="row form-group">
@@ -32,10 +31,7 @@ export default {
   },
   computed: {
     showHTTPSWarning(): boolean {
-      return (
-        !this.$store.state.plantumlEditor.isHTTPS &&
-        this.$store.state.plantumlEditor.showHTTPSWarning
-      )
+      return !this.$store.state.plantumlEditor.isHTTPS && this.$store.state.plantumlEditor.showHTTPSWarning
     },
     showHotkeyTips(): boolean {
       return this.$store.state.plantumlEditor.showHotkeyTips
@@ -64,5 +60,4 @@ export default {
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
-</style>
+<style scoped></style>

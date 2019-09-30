@@ -12,15 +12,11 @@ const actions: any = {
     AP.confluence.closeMacroEditor()
   },
   save(context: any) {
-    console.debug(
-      `[PowerPlantUML] Saving macro. Body length is ${
-        context.rootState.plantumlEditor.text.length
-      }`
-    )
+    console.debug(`[PowerPlantUML] Saving macro. Body length is ${context.rootState.plantumlEditor.text.length}`)
     AP.confluence.saveMacro(
       {
         url: context.rootState.plantumlEditor.src,
-        doc: context.rootState.plantumlEditor.text,
+        // doc: context.rootState.plantumlEditor.text,
         imageType: context.rootState.plantumlEditor.umlExtension,
         encodedUML: context.rootState.plantumlEditor.encodedText,
         language: 'plantuml'
@@ -47,15 +43,8 @@ const actions: any = {
     // Set image type
     console.debug(`[PowerPlantUML] Image type is ${macroParams.imageType}`)
     if (macroParams.imageType) {
-      context.dispatch(
-        'plantumlEditor/setUmlExtension',
-        macroParams.imageType,
-        { root: true }
-      )
-      context.dispatch(
-        'plantumlEditor/renderUML',
-        context.rootState.plantumlEditor.text
-      )
+      context.dispatch('plantumlEditor/setUmlExtension', macroParams.imageType, { root: true })
+      context.dispatch('plantumlEditor/renderUML', context.rootState.plantumlEditor.text)
     }
     // Set document definition language
     console.debug(`[PowerPlantUML] Language is ${macroParams.language}`)
@@ -65,17 +54,14 @@ const actions: any = {
       })
     }
     // Recover document
-    if (macroParams.doc) {
-      console.debug(
-        `[PowerPlantUML] Loading document. Length is ${macroParams.doc.length}`
-      )
-      context.dispatch('plantumlEditor/renderUML', macroParams.doc, {
-        root: true
-      })
-    } else if (macroParams.url) {
-      console.debug(
-        `[PowerPlantUML] Loading document from URL ${macroParams.url}`
-      )
+    // if (macroParams.doc) {
+    //   console.debug(`[PowerPlantUML] Loading document. Length is ${macroParams.doc.length}`)
+    //   context.dispatch('plantumlEditor/renderUML', macroParams.doc, {
+    //     root: true
+    //   })
+    // } else 
+    if (macroParams.url) {
+      console.debug(`[PowerPlantUML] Loading document from URL ${macroParams.url}`)
       const encodedUML = extractEncodedUMLFromURL(macroParams.url)
       context.dispatch('plantumlEditor/renderEncodedUML', encodedUML, {
         root: true

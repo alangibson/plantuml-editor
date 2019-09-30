@@ -83,10 +83,7 @@ export default {
   created() {
     this.resize()
     this.$store.dispatch('plantumlEditor/getLocalStrage')
-    this.$store.dispatch(
-      'plantumlEditor/renderUML',
-      this.$store.state.plantumlEditor.text
-    )
+    this.$store.dispatch('plantumlEditor/renderUML', this.$store.state.plantumlEditor.text)
     this.$store.dispatch('histories/defineScheme')
   },
   mounted() {
@@ -100,10 +97,7 @@ export default {
     //
     // Look for a query param ?uml={..} or anchor #uml={...}
     if (this.$route.query.uml) {
-      this.$store.dispatch(
-        'plantumlEditor/renderEncodedUML',
-        this.$route.query.uml
-      )
+      this.$store.dispatch('plantumlEditor/renderEncodedUML', this.$route.query.uml)
     } else if (this.$route.hash) {
       let anchor: string = this.$route.hash.split('#')[1]
 
@@ -122,12 +116,7 @@ export default {
           .join('github=')
           // Split on path separator
           .split('/')
-        let [
-          ownerName: string,
-          repositoryName: string,
-          shaOrRef: string,
-          ...fileParts: string
-        ]: Array<*> = splitHash
+        let [ownerName: string, repositoryName: string, shaOrRef: string, ...fileParts: string]: Array<*> = splitHash
         let path: string = fileParts.join('/')
 
         // Open file by path or sha
@@ -142,23 +131,15 @@ export default {
               this.$store.dispatch('github/setBlobBySHA', shaOrRef).then(() => {
                 // Add file to history
                 // TODO github path should be file id in plantumlEditor
-                this.$store.dispatch(
-                  'histories/save',
-                  this.$store.state.plantumlEditor
-                )
+                this.$store.dispatch('histories/save', this.$store.state.plantumlEditor)
               })
             } else {
               // Support splitHash[2] == ref and everything else is file path (like GitHub raw urls)
-              this.$store
-                .dispatch('github/setContents', { ref: shaOrRef, path: path })
-                .then(() => {
-                  // Add file to history
-                  // TODO github path should be file id in plantumlEditor
-                  this.$store.dispatch(
-                    'histories/save',
-                    this.$store.state.plantumlEditor
-                  )
-                })
+              this.$store.dispatch('github/setContents', { ref: shaOrRef, path: path }).then(() => {
+                // Add file to history
+                // TODO github path should be file id in plantumlEditor
+                this.$store.dispatch('histories/save', this.$store.state.plantumlEditor)
+              })
             }
           })
           .catch((error: any) => {

@@ -1,7 +1,7 @@
 <template>
   <div class="row">
     <div class="col-sm-12">
-      <div id="umlArea" class="dragscroll umlImage" :style="{'height':height}">
+      <div id="umlArea" class="dragscroll umlImage" :style="{ height: height }">
         <div v-html="preMarkdown"></div>
 
         <!--
@@ -10,7 +10,7 @@
         -->
         <!--<img :src="src" @load="loadedImg" v-if="!isSvg && hasSrc" :width="umlWidth"/>-->
         <!--<object :data="src" @load="loadedImg" v-else-if="isSvg && hasSrc" :width="umlWidth"></object>-->
-        <img :src="src" @load="loadedImg" :width="umlWidth"/>
+        <img :src="src" @load="loadedImg" :width="umlWidth" />
 
         <div v-html="afterMarkdown"></div>
       </div>
@@ -48,10 +48,7 @@ export default {
       return this.$store.state.plantumlEditor.afterMarkdown
     },
     umlWidth(): string {
-      if (
-        this.$store.state.plantumlEditor.umlWidth &&
-        this.$store.state.plantumlEditor.umlWidth >= 1
-      ) {
+      if (this.$store.state.plantumlEditor.umlWidth && this.$store.state.plantumlEditor.umlWidth >= 1) {
         return this.$store.state.plantumlEditor.umlWidth + '%'
       } else {
         return 'auto'

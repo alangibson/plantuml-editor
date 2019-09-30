@@ -1,12 +1,10 @@
 <template>
   <div class="navbar navbar-inverse navbar-static-top">
-
     <div class="container-fluid">
-
       <ul class="nav navbar-nav navbar-left">
         <li>
           <a href="#" @click.prevent="changeHistoryColSize">
-            <span class="glyphicon glyphicon-menu-hamburger" :class="{'fa-rotate-90': isCloseHistory}"></span>
+            <span class="glyphicon glyphicon-menu-hamburger" :class="{ 'fa-rotate-90': isCloseHistory }"></span>
           </a>
         </li>
       </ul>
@@ -20,16 +18,13 @@
       <!-- Github support -->
       <ul class="nav navbar-nav">
         <li class="dropdown">
-          <a class="dropdown-toggle" data-toggle="dropdown" role="button">
-            <span class="glyphicon glyphicon-info-sign"></span> github <b class="caret"></b>
-          </a>
+          <a class="dropdown-toggle" data-toggle="dropdown" role="button"> <span class="glyphicon glyphicon-info-sign"></span> github <b class="caret"></b> </a>
           <ul class="dropdown-menu">
             <li>
               <a href="#selectGithubRepo" @click.prevent="selectGithubRepo">Open File</a>
             </li>
             <li>
-              <a v-if="umlExtension==='svg'"
-                 href="#createGist" @click.prevent="showGistModal">Create Gist</a>
+              <a v-if="umlExtension === 'svg'" href="#createGist" @click.prevent="showGistModal">Create Gist</a>
               <a v-else style="color: grey;" @click.prevent="">Create Gist (SVG Only)</a>
             </li>
             <li>
@@ -41,9 +36,7 @@
 
       <ul class="nav navbar-nav">
         <li class="dropdown">
-          <a class="dropdown-toggle" data-toggle="dropdown" role="button">
-            <span class="glyphicon glyphicon-info-sign"></span> cheat sheet <b class="caret"></b>
-          </a>
+          <a class="dropdown-toggle" data-toggle="dropdown" role="button"> <span class="glyphicon glyphicon-info-sign"></span> cheat sheet <b class="caret"></b> </a>
           <ul class="dropdown-menu">
             <li><a href="#CommonCheatSheet" @click.prevent="changeCheatSheetColSize">Common</a></li>
             <li class="divider"></li>
@@ -62,23 +55,18 @@
 
       <ul class="nav navbar-nav">
         <li>
-          <a href="#" data-toggle="modal" data-target="#options">
-            <span class="glyphicon glyphicon-cog"></span> options
-          </a>
+          <a href="#" data-toggle="modal" data-target="#options"> <span class="glyphicon glyphicon-cog"></span> options </a>
         </li>
       </ul>
 
       <ul class="nav navbar-nav">
         <li>
-          <a href="#" data-toggle="modal" data-target="#help">
-            <span class="glyphicon glyphicon-question-sign"></span> help
-          </a>
+          <a href="#" data-toggle="modal" data-target="#help"> <span class="glyphicon glyphicon-question-sign"></span> help </a>
         </li>
       </ul>
 
       <!-- Conditionally display Confluence buttons -->
-      <ul v-if="enableConfluence"
-          class="nav navbar-nav navbar-right">
+      <ul v-if="enableConfluence" class="nav navbar-nav navbar-right">
         <li class="nav-item">
           <a class="nav-link" @click.prevent="cancelConfluence">Cancel</a>
         </li>
@@ -87,15 +75,19 @@
         </li>
       </ul>
 
-      <div v-if="! enableConfluence"
-           class="navbar-header navbar-right">
+      <div v-if="!enableConfluence" class="navbar-header navbar-right">
         <ul class="navbar-text list-inline">
-          <li><a href="https://github.com/kkeisuke/plantuml-editor" class="navbar-link" target="_blank"><i class="fa fa-github fa-lg"></i></a></li>
-          <li><a href="https://twitter.com/kkeisuke" class="navbar-link" target="_blank"><i class="fa fa-twitter fa-lg"></i></a></li>
-          <li><a href="http://kkeisuke.com/" class="navbar-link" target="_blank"><i class="fa fa-home fa-lg"></i></a></li>
+          <li>
+            <a href="https://github.com/kkeisuke/plantuml-editor" class="navbar-link" target="_blank"><i class="fa fa-github fa-lg"></i></a>
+          </li>
+          <li>
+            <a href="https://twitter.com/kkeisuke" class="navbar-link" target="_blank"><i class="fa fa-twitter fa-lg"></i></a>
+          </li>
+          <li>
+            <a href="http://kkeisuke.com/" class="navbar-link" target="_blank"><i class="fa fa-home fa-lg"></i></a>
+          </li>
         </ul>
       </div>
-
     </div>
   </div>
 </template>

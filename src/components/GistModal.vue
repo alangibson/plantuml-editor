@@ -8,63 +8,39 @@
         </div>
         <div class="modal-body">
           <form class="form-horizontal" @submit.prevent="submit">
-            <div class="form-group" :class="{'has-error':errors.has('fileName')}">
+            <div class="form-group" :class="{ 'has-error': errors.has('fileName') }">
               <label for="fileName" class="col-sm-2 control-label">file name</label>
               <div class="col-sm-10">
-                <input
-                  type="text"
-                  id="fileName"
-                  name="fileName"
-                  v-model="fileName"
-                  v-validate="'required|fileName'"
-                  data-vv-as="file name"
-                  class="form-control">
+                <input type="text" id="fileName" name="fileName" v-model="fileName" v-validate="'required|fileName'" data-vv-as="file name" class="form-control" />
                 <span class="help-block" v-if="errors.has('fileName')">
-                  {{errors.first('fileName')}}
+                  {{ errors.first('fileName') }}
                 </span>
                 <span class="help-block" v-else-if="fileName">
-                  file name are <code>{{fileName}}.{{ext.svg}}</code>, <code>{{fileName}}.{{ext.txt}}</code> .
+                  file name are <code>{{ fileName }}.{{ ext.svg }}</code
+                  >, <code>{{ fileName }}.{{ ext.txt }}</code> .
                 </span>
                 <span class="help-block" v-else>
-                  <code>.{{ext.svg}}</code> and <code>.{{ext.txt}}</code> file name
+                  <code>.{{ ext.svg }}</code> and <code>.{{ ext.txt }}</code> file name
                 </span>
               </div>
             </div>
             <div class="form-group">
               <label for="description" class="col-sm-2 control-label">description</label>
               <div class="col-sm-10">
-                <input
-                  type="text"
-                  id="description"
-                  name="description"
-                  v-model="description"
-                  class="form-control">
+                <input type="text" id="description" name="description" v-model="description" class="form-control" />
               </div>
             </div>
             <div class="form-group">
               <div class="col-sm-offset-2 col-sm-10">
-                <label class="radio-inline">
-                  <input type="radio" name="isPublic" :value="true" v-model="isPublic"> public
-                </label>
-                <label class="radio-inline">
-                  <input type="radio" name="isPublic" :value="false" v-model="isPublic"> secret
-                </label>
+                <label class="radio-inline"> <input type="radio" name="isPublic" :value="true" v-model="isPublic" /> public </label>
+                <label class="radio-inline"> <input type="radio" name="isPublic" :value="false" v-model="isPublic" /> secret </label>
               </div>
             </div>
-            <div class="form-group" :class="{'has-error':errors.has('token')}">
+            <div class="form-group" :class="{ 'has-error': errors.has('token') }">
               <label for="token" class="col-sm-2 control-label">token</label>
               <div class="col-sm-10">
-                <input
-                  type="text"
-                  id="token"
-                  name="token"
-                  v-model="token"
-                  v-validate="'required|alpha_num'"
-                  data-vv-as="token"
-                  class="form-control">
-                <span class="help-block" v-if="errors.has('token')">
-                  {{errors.first('token')}}<br>
-                </span>
+                <input type="text" id="token" name="token" v-model="token" v-validate="'required|alpha_num'" data-vv-as="token" class="form-control" />
+                <span class="help-block" v-if="errors.has('token')"> {{ errors.first('token') }}<br /> </span>
                 <span class="help-block">
                   <a href="https://help.github.com/articles/creating-a-personal-access-token-for-the-command-line/" target="_blank">Creating a personal access token</a>
                 </span>
@@ -80,10 +56,10 @@
             <div class="row">
               <div class="col-sm-offset-2 col-sm-10">
                 <div class="alert alert-success" v-if="gistUrl">
-                  <a :href="gistUrl" target="_blank">{{gistUrl}}</a>
+                  <a :href="gistUrl" target="_blank">{{ gistUrl }}</a>
                 </div>
                 <div class="alert alert-danger" v-if="errorMsg">
-                  {{errorMsg}}
+                  {{ errorMsg }}
                 </div>
               </div>
             </div>
@@ -141,11 +117,7 @@ export default {
     },
     gistApiInValid(): boolean {
       // 「ファイル名が空 or GistのURL取得済み or バリデーションエラーがある or 送信中」場合は投稿できない
-      const result: boolean =
-        this.fileName === '' ||
-        Boolean(this.$store.state.gistApi.gistUrl) ||
-        Boolean(this.$validator.errors.count()) ||
-        this.$store.state.gistApi.isSending
+      const result: boolean = this.fileName === '' || Boolean(this.$store.state.gistApi.gistUrl) || Boolean(this.$validator.errors.count()) || this.$store.state.gistApi.isSending
       return result
     }
   },
@@ -164,10 +136,7 @@ export default {
   },
   methods: {
     setValidation() {
-      this.$validator.extend(
-        'fileName',
-        this.$store.state.gistApi.validation.fileName
-      )
+      this.$validator.extend('fileName', this.$store.state.gistApi.validation.fileName)
     },
     setEvent() {
       window.$('#gist').on('shown.bs.modal hidden.bs.modal', () => {
@@ -191,5 +160,4 @@ export default {
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
-</style>
+<style scoped></style>

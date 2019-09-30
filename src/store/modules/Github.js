@@ -73,10 +73,7 @@ const actions = {
       })
       .catch((error: any) => {
         console.error(error)
-        context.commit(
-          'settingsAuthenticationErrorMessage',
-          'Failed to authenticate you with GitHub. Please check your token.'
-        )
+        context.commit('settingsAuthenticationErrorMessage', 'Failed to authenticate you with GitHub. Please check your token.')
         throw error
       })
   },
@@ -112,10 +109,7 @@ const actions = {
    * Set repo by owner name and repository name.
    * Useful for jumping to a repo based on URL anchor.
    */
-  setRepositoryByName(
-    context: any,
-    { ownerName, repositoryName }: { ownerName: string, repositoryName: string }
-  ): Promise<*> {
+  setRepositoryByName(context: any, { ownerName, repositoryName }: { ownerName: string, repositoryName: string }): Promise<*> {
     return new GitHub({ token: context.state.token })
       .getRepo(ownerName, repositoryName)
       .getDetails()

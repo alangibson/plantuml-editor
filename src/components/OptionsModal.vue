@@ -11,29 +11,17 @@
             <div class="form-group">
               <label class="col-sm-4 control-label">keymap</label>
               <div class="col-sm-8">
-                <label class="radio-inline">
-                  <input type="radio" name="keymap" v-model="keymap" value="sublime"> sublime
-                </label>
-                <label class="radio-inline">
-                  <input type="radio" name="keymap" v-model="keymap" value="vim"> vim
-                </label>
-                <label class="radio-inline">
-                  <input type="radio" name="keymap" v-model="keymap" value="emacs"> emacs
-                </label>
+                <label class="radio-inline"> <input type="radio" name="keymap" v-model="keymap" value="sublime" /> sublime </label>
+                <label class="radio-inline"> <input type="radio" name="keymap" v-model="keymap" value="vim" /> vim </label>
+                <label class="radio-inline"> <input type="radio" name="keymap" v-model="keymap" value="emacs" /> emacs </label>
               </div>
             </div>
             <div class="form-group">
               <label class="col-sm-4 control-label">indent</label>
               <div class="col-sm-8">
-                <label class="radio-inline">
-                  <input type="radio" name="indent" v-model="indent" value="space2"> space 2
-                </label>
-                <label class="radio-inline">
-                  <input type="radio" name="indent" v-model="indent" value="space4"> space 4
-                </label>
-                <label class="radio-inline">
-                  <input type="radio" name="indent" v-model="indent" value="tab"> tab
-                </label>
+                <label class="radio-inline"> <input type="radio" name="indent" v-model="indent" value="space2" /> space 2 </label>
+                <label class="radio-inline"> <input type="radio" name="indent" v-model="indent" value="space4" /> space 4 </label>
+                <label class="radio-inline"> <input type="radio" name="indent" v-model="indent" value="tab" /> tab </label>
               </div>
             </div>
             <div class="form-group">
@@ -49,7 +37,7 @@
             <div class="form-group">
               <label class="col-sm-4 control-label">PlantUML server</label>
               <div class="col-sm-8">
-                <input name="cdn" v-model="cdn"/>
+                <input name="cdn" v-model="cdn" />
               </div>
             </div>
           </form>
@@ -165,5 +153,4 @@ export default {
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
-</style>
+<style scoped></style>

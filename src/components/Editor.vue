@@ -1,5 +1,5 @@
 <template>
-  <div :style="{height: height}">
+  <div :style="{ height: height }">
     <codemirror :value="text" :options="options" @ready="onReady" @input="onChange"></codemirror>
   </div>
 </template>
@@ -113,10 +113,7 @@ export default {
         // Clear old timer and start a new one
         clearTimeout(renderTimer)
         renderTimer = setTimeout(() => {
-          this.$store.dispatch(
-            'plantumlEditor/renderUML',
-            this.$store.state.plantumlEditor.text
-          )
+          this.$store.dispatch('plantumlEditor/renderUML', this.$store.state.plantumlEditor.text)
         }, 2000)
       })
     },
@@ -157,16 +154,10 @@ export default {
     addKeymap() {
       const map: any = {}
       map[this.$store.state.plantumlEditor.renderUMLKey.win] = () => {
-        this.$store.dispatch(
-          'plantumlEditor/renderUML',
-          this.$store.state.plantumlEditor.text
-        )
+        this.$store.dispatch('plantumlEditor/renderUML', this.$store.state.plantumlEditor.text)
       }
       map[this.$store.state.plantumlEditor.renderUMLKey.mac] = () => {
-        this.$store.dispatch(
-          'plantumlEditor/renderUML',
-          this.$store.state.plantumlEditor.text
-        )
+        this.$store.dispatch('plantumlEditor/renderUML', this.$store.state.plantumlEditor.text)
       }
       map[this.$store.state.plantumlEditor.snippetKey.win] = () => {
         this.snippet()

@@ -68,9 +68,7 @@ const actions: any = {
     if (context.state.fullSize.uml) {
       context.dispatch('setColSize', context.state.fullSize.previousColSize)
     } else {
-      context.state.fullSize.previousColSize = JSON.parse(
-        JSON.stringify(context.state.colSize)
-      )
+      context.state.fullSize.previousColSize = JSON.parse(JSON.stringify(context.state.colSize))
       context.commit('setColSize', {
         history: 0,
         editor: 0,
